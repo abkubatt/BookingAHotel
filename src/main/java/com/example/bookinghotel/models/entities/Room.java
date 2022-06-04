@@ -27,5 +27,6 @@ public class Room {
     @OneToOne
     @JoinColumn(name = "type_of_room")
     TypeOfRoom typeOfRoom;
+    boolean active;
 
 }
