@@ -18,7 +18,7 @@ public class Price {
     float price;
     LocalDate startDate;
     LocalDate endDate;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_id")
     Room room;
 

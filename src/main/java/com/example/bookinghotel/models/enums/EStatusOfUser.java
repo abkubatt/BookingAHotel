@@ -1,6 +1,6 @@
 package com.example.bookinghotel.models.enums;
 
-public enum StatusOfUser {
+public enum EStatusOfUser {
     BLOCKED,
     UNBLOCKED
 }

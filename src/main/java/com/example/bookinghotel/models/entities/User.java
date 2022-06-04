@@ -1,7 +1,8 @@
 package com.example.bookinghotel.models.entities;
 
-import com.example.bookinghotel.models.enums.ERole;
-import com.example.bookinghotel.models.enums.StatusOfUser;
+import com.example.bookinghotel.models.entities.enumentities.Role;
+import com.example.bookinghotel.models.entities.enumentities.StatusOfUser;
+import com.example.bookinghotel.models.enums.EStatusOfUser;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -14,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Table(name = "tb_user")
+@Table(name = "user_tb")
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
@@ -33,8 +34,8 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     Set<Role> roles = new HashSet<>();
-    @Enumerated(EnumType.STRING)
+    @OneToOne
+    @JoinColumn(name = "status_of_user")
     StatusOfUser statusOfUser;
-
 
 }

@@ -1,6 +1,6 @@
 package com.example.bookinghotel.models.enums;
 
-public enum StatusOfBook {
+public enum EStatusOfBook {
     ACTIVE,
     INACTIVE
 }

@@ -18,6 +18,7 @@ public class Hotel {
     String name;
     String description;
     String address;
+    byte star;
     String photos;
     String phone;
     String email;
