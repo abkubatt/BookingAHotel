@@ -12,5 +12,6 @@ public class UserDto {
     String name;
     String email;
     Set<RoleDto> roles = new HashSet<>();
-    StatusOfUserDto statusOfUser;
+//    StatusOfUserDto statusOfUser;
+    boolean active;
 }

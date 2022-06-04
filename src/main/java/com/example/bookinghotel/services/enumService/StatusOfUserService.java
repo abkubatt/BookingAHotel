@@ -1,8 +1,9 @@
 package com.example.bookinghotel.services.enumService;
 
 import com.example.bookinghotel.models.dtos.enumdtos.StatusOfUserDto;
+import org.springframework.http.ResponseEntity;
 
 public interface StatusOfUserService {
 
-    StatusOfUserDto save(StatusOfUserDto statusOfUserDto);
+    ResponseEntity<?> save(StatusOfUserDto statusOfUserDto);
 }

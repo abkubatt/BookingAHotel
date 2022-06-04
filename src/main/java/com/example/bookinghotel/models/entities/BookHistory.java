@@ -21,4 +21,5 @@ public class BookHistory {
     Booking booking;
     LocalDate changeDate;
     String comment;
+    boolean active;
 }

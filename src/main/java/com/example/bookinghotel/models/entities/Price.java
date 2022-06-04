@@ -21,5 +21,6 @@ public class Price {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_id")
     Room room;
+    boolean active;
 
 }

@@ -12,4 +12,5 @@ public class BookHistoryDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate changeDate;
     String comment;
+    boolean active;
 }

@@ -1,8 +1,9 @@
 package com.example.bookinghotel.services;
 
 import com.example.bookinghotel.models.dtos.BookHistoryDto;
+import org.springframework.http.ResponseEntity;
 
 public interface BookHistoryService {
 
-    BookHistoryDto save(BookHistoryDto bookHistoryDto);
+    ResponseEntity<?> save(BookHistoryDto bookHistoryDto);
 }

@@ -1,8 +1,9 @@
 package com.example.bookinghotel.services.enumService;
 
 import com.example.bookinghotel.models.dtos.enumdtos.TypeOfRoomDto;
+import org.springframework.http.ResponseEntity;
 
 public interface TypeOfRoomService {
 
-    TypeOfRoomDto save(TypeOfRoomDto typeOfRoomDto);
+    ResponseEntity<?> save(TypeOfRoomDto typeOfRoomDto);
 }

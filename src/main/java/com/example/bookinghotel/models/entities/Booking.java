@@ -28,9 +28,10 @@ public class Booking {
     @JoinColumn(name = "guest_id")
     User user;
     String comment;
-    @ManyToOne
-    @JoinColumn(name = "status_of_book")
-    StatusOfBook statusOfBook;
+//    @ManyToOne
+//    @JoinColumn(name = "status_of_book")
+//    StatusOfBook statusOfBook;
+    boolean active;
     float priceOfBook;
 
 }

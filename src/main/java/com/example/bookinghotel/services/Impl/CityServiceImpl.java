@@ -4,8 +4,11 @@ import com.example.bookinghotel.dao.CityDao;
 import com.example.bookinghotel.mappers.CityMapper;
 import com.example.bookinghotel.models.dtos.CityDto;
 import com.example.bookinghotel.models.entities.City;
+import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,8 +18,30 @@ public class CityServiceImpl implements CityService {
     private final CityMapper cityMapper = CityMapper.INSTANCE;
 
     @Override
-    public CityDto save(CityDto cityDto) {
+    public ResponseEntity<?> save(CityDto cityDto) {
         City city = cityMapper.toEntity(cityDto);
-        return cityMapper.toDto(cityDao.save(city));
+        city.setActive(true);
+        City saveCity = cityDao.save(city);
+        return new ResponseEntity<>(Message.of("City saved"), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> update(CityDto cityDto) {
+        boolean isExists = cityDao.existsById(cityDto.getId());
+        if (!isExists){
+            return new ResponseEntity<>(Message.of("City not found"), HttpStatus.NOT_FOUND);
+        }else{
+            City city = cityMapper.toEntity(cityDto);
+            City updatedCity = cityDao.save(city);
+            return new ResponseEntity<>(Message.of("City updated"), HttpStatus.OK);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> delete(CityDto cityDto) {
+        City city = cityMapper.toEntity(cityDto);
+        city.setActive(false);
+        ResponseEntity<?> cityDeleted = update(cityMapper.toDto(city));
+        return new ResponseEntity<>(Message.of("city deleted"), HttpStatus.OK);
     }
 }

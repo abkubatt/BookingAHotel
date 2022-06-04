@@ -14,4 +14,5 @@ public class ReviewDto {
     byte score;
     String text;
     ReplyToReviewDto replyToReview;
+    boolean active;
 }

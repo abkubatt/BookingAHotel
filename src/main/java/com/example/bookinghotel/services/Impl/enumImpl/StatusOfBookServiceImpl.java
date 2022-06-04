@@ -4,8 +4,11 @@ import com.example.bookinghotel.dao.enumDao.StatusOfBookDao;
 import com.example.bookinghotel.mappers.enumMappers.StatusOfBookMapper;
 import com.example.bookinghotel.models.dtos.enumdtos.StatusOfBookDto;
 import com.example.bookinghotel.models.entities.enumentities.StatusOfBook;
+import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.enumService.StatusOfBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,8 +18,10 @@ public class StatusOfBookServiceImpl implements StatusOfBookService {
     private final StatusOfBookMapper statusOfBookMapper = StatusOfBookMapper.INSTANCE;
 
     @Override
-    public StatusOfBookDto save(StatusOfBookDto statusOfBookDto) {
+    public ResponseEntity<?> save(StatusOfBookDto statusOfBookDto) {
         StatusOfBook statusOfBook = statusOfBookMapper.toEntity(statusOfBookDto);
-        return statusOfBookMapper.toDto(statusOfBookDao.save(statusOfBook));
+        StatusOfBook saveStatusOfBook = statusOfBookDao.save(statusOfBook);
+        return new ResponseEntity<>(Message.of("StatusOfBook saved"), HttpStatus.OK);
     }
 }
+

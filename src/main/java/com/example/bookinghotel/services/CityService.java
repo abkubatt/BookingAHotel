@@ -1,8 +1,13 @@
 package com.example.bookinghotel.services;
 
 import com.example.bookinghotel.models.dtos.CityDto;
+import org.springframework.http.ResponseEntity;
 
 public interface CityService {
 
-    CityDto save(CityDto cityDto);
+    ResponseEntity<?> save(CityDto cityDto);
+    
+    ResponseEntity<?> update(CityDto cityDto);
+
+    ResponseEntity<?> delete(CityDto cityDto);
 }

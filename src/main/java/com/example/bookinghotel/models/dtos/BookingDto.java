@@ -21,6 +21,7 @@ public class BookingDto {
     LocalDate checkOutDate;
     UserDto user;
     String comment;
-    StatusOfBookDto statusOfBook;
+//    StatusOfBookDto statusOfBook;
+    boolean active;
     float priceOfBook;
 }

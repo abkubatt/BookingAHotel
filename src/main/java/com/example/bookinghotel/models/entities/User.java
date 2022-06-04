@@ -34,8 +34,9 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     Set<Role> roles = new HashSet<>();
-    @OneToOne
-    @JoinColumn(name = "status_of_user")
-    StatusOfUser statusOfUser;
+    boolean active;
+//    @OneToOne
+//    @JoinColumn(name = "status_of_user")
+//    StatusOfUser statusOfUser;
 
 }
