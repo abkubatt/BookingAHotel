@@ -22,9 +22,6 @@ public class Review {
     Hotel hotel;
     byte score;
     String text;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "reply_to_review")
-    ReplyToReview replyToReview;
     boolean active;
 
 

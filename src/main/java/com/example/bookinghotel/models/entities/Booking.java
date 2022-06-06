@@ -1,6 +1,5 @@
 package com.example.bookinghotel.models.entities;
 
-import com.example.bookinghotel.models.entities.enumentities.StatusOfBook;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -28,9 +27,6 @@ public class Booking {
     @JoinColumn(name = "guest_id")
     User user;
     String comment;
-//    @ManyToOne
-//    @JoinColumn(name = "status_of_book")
-//    StatusOfBook statusOfBook;
     boolean active;
     float priceOfBook;
 

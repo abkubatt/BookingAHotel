@@ -22,7 +22,7 @@ public class CityServiceImpl implements CityService {
         City city = cityMapper.toEntity(cityDto);
         city.setActive(true);
         City saveCity = cityDao.save(city);
-        return new ResponseEntity<>(Message.of("City saved"), HttpStatus.OK);
+        return new ResponseEntity<>(saveCity, HttpStatus.OK);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class CityServiceImpl implements CityService {
         }else{
             City city = cityMapper.toEntity(cityDto);
             City updatedCity = cityDao.save(city);
-            return new ResponseEntity<>(Message.of("City updated"), HttpStatus.OK);
+            return new ResponseEntity<>(updatedCity, HttpStatus.OK);
         }
     }
 
@@ -42,6 +42,11 @@ public class CityServiceImpl implements CityService {
         City city = cityMapper.toEntity(cityDto);
         city.setActive(false);
         ResponseEntity<?> cityDeleted = update(cityMapper.toDto(city));
-        return new ResponseEntity<>(Message.of("city deleted"), HttpStatus.OK);
+        if(cityDeleted.getStatusCode().equals(HttpStatus.OK)){
+            return new ResponseEntity<>(Message.of("city deleted"), HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(Message.of("City not deleted"), HttpStatus.NOT_FOUND);
+
+        }
     }
 }

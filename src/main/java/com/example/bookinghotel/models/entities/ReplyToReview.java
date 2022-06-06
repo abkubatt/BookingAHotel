@@ -18,4 +18,7 @@ public class ReplyToReview {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+    @OneToOne
+    @JoinColumn(name = "review_id")
+    Review review;
 }

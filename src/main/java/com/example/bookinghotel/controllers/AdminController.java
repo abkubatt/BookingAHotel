@@ -143,10 +143,7 @@ public class AdminController {
     public ResponseEntity<?> saveReview(@RequestBody ReviewDto reviewDto){
         return reviewService.save(reviewDto);
     }
-    @PutMapping("/updateReview")
-    public ResponseEntity<?> updateReview(@RequestBody ReviewDto reviewDto){
-        return reviewService.update(reviewDto);
-    }
+
     @DeleteMapping("/deleteReview")
     public ResponseEntity<?> deleteReview(@RequestBody ReviewDto reviewDto){
         return reviewService.delete(reviewDto);
@@ -175,5 +172,6 @@ public class AdminController {
     public ResponseEntity<?> deleteUser(@RequestBody UserDto userDto){
         return userService.delete(userDto);
     }
+
 
 }

@@ -1,6 +1,6 @@
 package com.example.bookinghotel.models.entities;
-import com.example.bookinghotel.models.entities.enumentities.TypeOfRoom;
-import com.example.bookinghotel.models.enums.ETypeOfRoom;
+import com.example.bookinghotel.models.enums.EBedType;
+import com.example.bookinghotel.models.enums.ETypeOfView;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -17,16 +17,15 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     int capacity;
-    String bedType;
+    @Enumerated(EnumType.STRING)
+    EBedType bedType;
     float square;
     boolean wifi;
-    String view;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hotel_id")
     Hotel hotel;
-    @OneToOne
-    @JoinColumn(name = "type_of_room")
-    TypeOfRoom typeOfRoom;
+    @Enumerated(EnumType.STRING)
+    ETypeOfView typeOfView;
     boolean active;
 
 }

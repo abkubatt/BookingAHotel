@@ -1,6 +1,6 @@
 package com.example.bookinghotel.models.enums;
 
-public enum ETypeOfRoom {
+public enum ETypeOfView {
     SIMPLE,
     VIP,
     LAKE_VIEW,
