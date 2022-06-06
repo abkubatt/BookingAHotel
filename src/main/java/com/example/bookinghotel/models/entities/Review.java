@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Data
 @Table(name = "review")
@@ -20,6 +21,7 @@ public class Review {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hotel_id")
     Hotel hotel;
+    LocalDate date;
     byte score;
     String text;
     boolean active;
