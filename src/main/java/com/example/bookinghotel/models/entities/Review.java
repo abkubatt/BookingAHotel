@@ -16,7 +16,7 @@ public class Review {
     Long id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "guest_id")
-    User user;
+    User guest;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hotel_id")
     Hotel hotel;

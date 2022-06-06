@@ -21,5 +21,18 @@ public class BookHistory {
     Booking booking;
     LocalDate changeDate;
     String comment;
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    Room room;
+    LocalDate checkInDate;
+    LocalDate checkOutDate;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User guest;
+    boolean bookActive;
     boolean active;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
+
 }

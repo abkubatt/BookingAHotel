@@ -25,7 +25,7 @@ public class Booking {
     LocalDate checkOutDate;
     @ManyToOne
     @JoinColumn(name = "guest_id")
-    User user;
+    User guest;
     String comment;
     boolean active;
     float priceOfBook;
