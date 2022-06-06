@@ -23,4 +23,15 @@ public class StatusOfUserServiceImpl implements StatusOfUserService {
         StatusOfUser saveStatusOfUser = statusOfUserDao.save(statusOfUser);
         return new ResponseEntity<>(Message.of("StatusOfUser Saved"), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<?> update(StatusOfUserDto statusOfUserDto) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> delete(StatusOfUserDto statusOfUserDto) {
+        statusOfUserDao.deleteById(statusOfUserDto.getId());
+        return new ResponseEntity<>(Message.of("StatusOfUser deleted"), HttpStatus.OK);
+    }
 }

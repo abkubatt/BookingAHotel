@@ -25,8 +25,9 @@ public class ReplyToReviewServiceImpl implements ReplyToReviewService {
     }
 
     @Override
-    public void delete(ReplyToReviewDto replyToReviewDto) {
+    public ResponseEntity<?> delete(ReplyToReviewDto replyToReviewDto) {
         ReplyToReview replyToReview = replyToReviewMapper.toEntity(replyToReviewDto);
         replyToReviewDao.deleteById(replyToReview.getId());
+        return new ResponseEntity<>(Message.of("ReplyToReview deleted"), HttpStatus.OK);
     }
 }

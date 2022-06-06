@@ -24,4 +24,15 @@ public class TypeOfRoomServiceImpl implements TypeOfRoomService {
         TypeOfRoom saveTypeOfRoom = typeOfRoomDao.save(typeOfRoom);
         return new ResponseEntity<>(Message.of("TypeOfRoom saved"), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<?> update(TypeOfRoomDto typeOfRoomDto) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> delete(TypeOfRoomDto typeOfRoomDto) {
+        typeOfRoomDao.deleteById(typeOfRoomDto.getId());
+        return new ResponseEntity<>(Message.of("TypeOfRoom deleted"), HttpStatus.OK);
+    }
 }

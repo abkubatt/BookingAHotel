@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 public interface StatusOfBookService {
 
     ResponseEntity<?> save(StatusOfBookDto statusOfBookDto);
+    ResponseEntity<?> update(StatusOfBookDto statusOfBookDto);
+    ResponseEntity<?> delete(StatusOfBookDto statusOfBookDto);
 }

@@ -5,4 +5,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface RoleService {
     ResponseEntity<?> save(RoleDto roleDto);
+    ResponseEntity<?> update(RoleDto roleDto);
+    ResponseEntity<?> delete(RoleDto roleDto);
 }

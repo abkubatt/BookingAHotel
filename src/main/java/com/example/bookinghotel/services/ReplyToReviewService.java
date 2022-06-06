@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface ReplyToReviewService {
     ResponseEntity<?> save(ReplyToReviewDto replyToReviewDto);
-    void delete(ReplyToReviewDto replyToReviewDto);
+    ResponseEntity<?> delete(ReplyToReviewDto replyToReviewDto);
 
 
 }

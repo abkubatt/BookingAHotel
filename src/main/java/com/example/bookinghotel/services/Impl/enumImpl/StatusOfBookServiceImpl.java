@@ -23,5 +23,16 @@ public class StatusOfBookServiceImpl implements StatusOfBookService {
         StatusOfBook saveStatusOfBook = statusOfBookDao.save(statusOfBook);
         return new ResponseEntity<>(Message.of("StatusOfBook saved"), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<?> update(StatusOfBookDto statusOfBookDto) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> delete(StatusOfBookDto statusOfBookDto) {
+        statusOfBookDao.deleteById(statusOfBookDto.getId());
+        return new ResponseEntity<>(Message.of("StatusOfBook deleted"), HttpStatus.OK);
+    }
 }
 
