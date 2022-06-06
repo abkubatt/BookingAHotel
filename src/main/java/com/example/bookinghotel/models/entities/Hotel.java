@@ -21,10 +21,12 @@ public class Hotel {
     byte star;
     String photos;
     String phone;
+    byte currentScore;
     String email;
     @ManyToOne
     @JoinColumn(name = "city_id")
     City city;
     boolean active;
+
 }
 

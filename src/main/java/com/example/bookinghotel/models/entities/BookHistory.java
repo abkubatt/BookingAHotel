@@ -32,7 +32,7 @@ public class BookHistory {
     boolean bookActive;
     boolean active;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "changed_user_id")
     User user;
 
 }

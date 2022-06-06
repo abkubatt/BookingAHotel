@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Data
 @Table(name = "reply_to_review")
@@ -18,6 +19,7 @@ public class ReplyToReview {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+    LocalDate date;
     @OneToOne
     @JoinColumn(name = "review_id")
     Review review;
