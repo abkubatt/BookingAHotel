@@ -22,7 +22,7 @@ public class PriceServiceImpl implements PriceService {
         Price price = priceMapper.toEntity(priceDto);
         price.setActive(true);
         Price savePrice = priceDao.save(price);
-        return new ResponseEntity<>(Message.of("Price saved"), HttpStatus.OK);
+        return new ResponseEntity<>(savePrice, HttpStatus.OK);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class PriceServiceImpl implements PriceService {
         }else {
             Price price = priceMapper.toEntity(priceDto);
             Price updatedPrice = priceDao.save(price);
-            return new ResponseEntity<>(Message.of("Price updated"), HttpStatus.OK);
+            return new ResponseEntity<>(updatedPrice, HttpStatus.OK);
         }
 
     }
@@ -43,6 +43,10 @@ public class PriceServiceImpl implements PriceService {
         Price price = priceMapper.toEntity(priceDto);
         price.setActive(false);
         ResponseEntity<?> deletedPrice = update(priceMapper.toDto(price));
-        return new ResponseEntity<>(Message.of("Price deleted"), HttpStatus.OK);
+        if (deletedPrice.getStatusCode().equals(HttpStatus.OK)){
+            return new ResponseEntity<>(deletedPrice, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(Message.of("Price not deleted"), HttpStatus.NOT_FOUND);
+        }
     }
 }

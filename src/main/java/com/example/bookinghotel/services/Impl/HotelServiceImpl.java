@@ -22,7 +22,7 @@ public class HotelServiceImpl implements HotelService {
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         hotel.setActive(true);
         Hotel saveHotel = hotelDao.save(hotel);
-        return new ResponseEntity<>(Message.of("Hotel saved"), HttpStatus.OK);
+        return new ResponseEntity<>(saveHotel, HttpStatus.OK);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class HotelServiceImpl implements HotelService {
         }else {
             Hotel hotel = hotelMapper.toEntity(hotelDto);
             Hotel updatedHotel = hotelDao.save(hotel);
-            return new ResponseEntity<>(Message.of("Hotel updated"), HttpStatus.OK);
+            return new ResponseEntity<>(updatedHotel, HttpStatus.OK);
         }
     }
 
@@ -42,6 +42,10 @@ public class HotelServiceImpl implements HotelService {
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         hotel.setActive(false);
         ResponseEntity<?> deletedHotel = update(hotelMapper.toDto(hotel));
-        return new ResponseEntity<>(Message.of("Hotel deleted"), HttpStatus.OK);
+        if (deletedHotel.getStatusCode().equals(HttpStatus.OK)){
+            return new ResponseEntity<>(deletedHotel, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(Message.of("Hotel not deleted"), HttpStatus.NOT_FOUND);
+        }
     }
 }

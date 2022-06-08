@@ -43,7 +43,7 @@ public class CityServiceImpl implements CityService {
         city.setActive(false);
         ResponseEntity<?> cityDeleted = update(cityMapper.toDto(city));
         if(cityDeleted.getStatusCode().equals(HttpStatus.OK)){
-            return new ResponseEntity<>(Message.of("city deleted"), HttpStatus.OK);
+            return new ResponseEntity<>(cityDeleted, HttpStatus.OK);
         }else{
             return new ResponseEntity<>(Message.of("City not deleted"), HttpStatus.NOT_FOUND);
 

@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toEntity(userDto);
         user.setActive(true);
         User saveUser = userDao.save(user);
-        return new ResponseEntity<>(Message.of("User saved"), HttpStatus.OK);
+        return new ResponseEntity<>(saveUser, HttpStatus.OK);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         else{
             User user = userMapper.toEntity(userDto);
             User updatedUser = userDao.save(user);
-            return new ResponseEntity<>(Message.of("User updated"), HttpStatus.OK);
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         }
     }
 
@@ -43,6 +43,10 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toEntity(userDto);
         user.setActive(false);
         ResponseEntity<?> deletedUser = update(userMapper.toDto(user));
-        return new ResponseEntity<>(Message.of("User deleted"), HttpStatus.OK);
+        if (deletedUser.getStatusCode().equals(HttpStatus.OK)){
+            return new ResponseEntity<>(deletedUser, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(Message.of("User not deleted"),HttpStatus.NOT_FOUND);
+        }
     }
 }

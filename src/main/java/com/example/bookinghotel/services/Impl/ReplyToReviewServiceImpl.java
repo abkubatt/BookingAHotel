@@ -21,7 +21,7 @@ public class ReplyToReviewServiceImpl implements ReplyToReviewService {
     public ResponseEntity<?> save(ReplyToReviewDto replyToReviewDto) {
         ReplyToReview replyToReview = replyToReviewMapper.toEntity(replyToReviewDto);
         ReplyToReview saveReplyToReview = replyToReviewDao.save(replyToReview);
-        return new ResponseEntity<>(Message.of("ReplyToReview Saved"), HttpStatus.OK);
+        return new ResponseEntity<>(saveReplyToReview, HttpStatus.OK);
     }
 
     @Override

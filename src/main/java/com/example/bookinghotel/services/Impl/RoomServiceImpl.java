@@ -21,7 +21,7 @@ public class RoomServiceImpl implements RoomService {
     public ResponseEntity<?> save(RoomDto roomDto) {
         Room room = roomMapper.toEntity(roomDto);
         Room saveRoom = roomDao.save(room);
-        return new ResponseEntity<>(Message.of("Room saved"), HttpStatus.OK);
+        return new ResponseEntity<>(saveRoom, HttpStatus.OK);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class RoomServiceImpl implements RoomService {
         }else {
             Room room = roomMapper.toEntity(roomDto);
             Room updatedRoom = roomDao.save(room);
-            return new ResponseEntity<>(Message.of("Room updated"), HttpStatus.OK);
+            return new ResponseEntity<>(updatedRoom, HttpStatus.OK);
         }
     }
 
@@ -41,6 +41,10 @@ public class RoomServiceImpl implements RoomService {
         Room room = roomMapper.toEntity(roomDto);
         room.setActive(false);
         ResponseEntity<?> deletedRoom = update(roomMapper.toDto(room));
-        return new ResponseEntity<>(Message.of("Room deleted"), HttpStatus.OK);
+        if (deletedRoom.getStatusCode().equals(HttpStatus.OK)){
+            return new ResponseEntity<>(deletedRoom, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(Message.of("Room not deleted"), HttpStatus.NOT_FOUND);
+        }
     }
 }

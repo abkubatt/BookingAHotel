@@ -4,11 +4,10 @@ import com.example.bookinghotel.dao.BookingDao;
 import com.example.bookinghotel.mappers.BookingMapper;
 import com.example.bookinghotel.models.dtos.BookingDto;
 import com.example.bookinghotel.models.entities.Booking;
-import com.example.bookinghotel.models.entities.enumentities.StatusOfBook;
-import com.example.bookinghotel.models.enums.EStatusOfBook;
+
 import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.BookingService;
-import com.example.bookinghotel.services.enumService.StatusOfBookService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,7 @@ import org.springframework.stereotype.Service;
 public class BookingServiceImpl implements BookingService {
     @Autowired
     private BookingDao bookingDao;
-    @Autowired
-    private StatusOfBookService statusOfBookService;
+
     private final BookingMapper bookingMapper = BookingMapper.INSTANCE;
 
 
@@ -28,7 +26,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingMapper.toEntity(bookingDto);
         booking.setActive(true);
         Booking bookingSaved = bookingDao.save(booking);
-        return new ResponseEntity<>(Message.of("City saved"), HttpStatus.OK);
+        return new ResponseEntity<>(bookingSaved, HttpStatus.OK);
     }
 
     @Override
@@ -39,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
         }else {
             Booking booking = bookingMapper.toEntity(bookingDto);
             Booking updatedBooking = bookingDao.save(booking);
-            return new ResponseEntity<>(Message.of("User updated"), HttpStatus.OK);
+            return new ResponseEntity<>(updatedBooking, HttpStatus.OK);
         }
 
     }
@@ -49,7 +47,11 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingMapper.toEntity(bookingDto);
         booking.setActive(false);
         ResponseEntity<?> bookingDeleted = update(bookingMapper.toDto(booking));
-        return new ResponseEntity<>(Message.of("Booking deleted"), HttpStatus.OK);
+        if(bookingDeleted.getStatusCode().equals(HttpStatus.OK)){
+            return new ResponseEntity<>(bookingDeleted,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(Message.of("Booking not deleted"), HttpStatus.NOT_FOUND);
+        }
     }
 
 }

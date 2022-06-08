@@ -25,7 +25,7 @@ public class BookHistoryServiceImpl implements BookHistoryService {
         BookHistory bookHistory = bookHistoryMapper.toEntity(bookHistoryDto);
         bookHistory.setActive(true);
         BookHistory savedBookHistory = bookHistoryDao.save(bookHistory);
-        return new ResponseEntity<>(Message.of("BookHistory saved"), HttpStatus.OK);
+        return new ResponseEntity<>(savedBookHistory, HttpStatus.OK);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BookHistoryServiceImpl implements BookHistoryService {
         }else{
             BookHistory bookHistory = bookHistoryMapper.toEntity(bookHistoryDto);
             BookHistory updatedBookHistory = bookHistoryDao.save(bookHistory);
-            return new ResponseEntity<>(Message.of("BookHistory is updated"), HttpStatus.OK);
+            return new ResponseEntity<>(updatedBookHistory, HttpStatus.OK);
         }
     }
 
@@ -44,7 +44,11 @@ public class BookHistoryServiceImpl implements BookHistoryService {
     public ResponseEntity<?> delete(BookHistoryDto bookHistoryDto) {
         BookHistory bookHistory = bookHistoryMapper.toEntity(bookHistoryDto);
         bookHistory.setActive(false);
-        ResponseEntity<?> savedBookHistory = update(bookHistoryMapper.toDto(bookHistory));
-        return new ResponseEntity<>(Message.of("BookHistory deleted"), HttpStatus.OK);
+        ResponseEntity<?> deletedBookHistory = update(bookHistoryMapper.toDto(bookHistory));
+        if (deletedBookHistory.getStatusCode().equals(HttpStatus.OK)){
+            return new ResponseEntity<>(deletedBookHistory, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(Message.of("BookHistory not deleted"), HttpStatus.NOT_FOUND);
+        }
     }
 }

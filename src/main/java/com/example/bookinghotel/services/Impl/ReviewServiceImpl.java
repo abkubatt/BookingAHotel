@@ -23,7 +23,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewMapper.toEntity(reviewDto);
         review.setActive(true);
         Review saveReview = reviewDao.save(review);
-        return new ResponseEntity<>(Message.of("Review saved"), HttpStatus.OK);
+        return new ResponseEntity<>(saveReview, HttpStatus.OK);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ReviewServiceImpl implements ReviewService {
         }else {
             Review review = reviewMapper.toEntity(reviewDto);
             Review updatedReview = reviewDao.save(review);
-            return new ResponseEntity<>(Message.of("Review updated"), HttpStatus.OK);
+            return new ResponseEntity<>(updatedReview, HttpStatus.OK);
         }
     }
 
@@ -43,6 +43,10 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewMapper.toEntity(reviewDto);
         review.setActive(false);
         ResponseEntity<?> deletedReview = update(reviewMapper.toDto(review));
-        return new ResponseEntity<>(Message.of("Review deleted"), HttpStatus.OK);
+        if (deletedReview.getStatusCode().equals(HttpStatus.OK)){
+            return new ResponseEntity<>(deletedReview, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(Message.of("Review not deleted"), HttpStatus.NOT_FOUND);
+        }
     }
 }
