@@ -3,6 +3,7 @@ package com.example.bookinghotel.models.dtos;
 import com.example.bookinghotel.models.entities.City;
 import lombok.Data;
 
+
 @Data
 public class HotelDto {
     Long id;
@@ -12,7 +13,8 @@ public class HotelDto {
     byte star;
     String photos;
     String phone;
+    byte currentScore;
     String email;
-    CityDto city;
+    City city;
     boolean active;
 }

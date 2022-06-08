@@ -29,10 +29,10 @@ public class BookHistory {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User guest;
-    boolean bookActive;
-    boolean active;
     @ManyToOne
     @JoinColumn(name = "changed_user_id")
     User user;
+    boolean bookActive;
+    boolean active;
 
 }

@@ -4,16 +4,17 @@ import com.example.bookinghotel.models.entities.Room;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 
 @Data
 public class PriceDto {
     Long id;
     float price;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate startDate;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate endDate;
-    RoomDto room;
+    Room room;
     boolean active;
 }
