@@ -15,6 +15,6 @@ public class PriceDto {
     float price;
     LocalDate startDate;
     LocalDate endDate;
-    Room room;
+    RoomDto room;
     boolean active;
 }

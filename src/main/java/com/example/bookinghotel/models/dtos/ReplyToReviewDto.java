@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class ReplyToReviewDto {
     Long id;
     String text;
-    User user;
+    UserDto user;
     LocalDate date;
-    Review review;
+    ReviewDto review;
 }

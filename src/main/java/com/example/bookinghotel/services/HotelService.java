@@ -10,4 +10,6 @@ public interface HotelService {
     ResponseEntity<?> update(HotelDto hotelDto);
 
     ResponseEntity<?> delete(HotelDto hotelDto);
+
+    ResponseEntity<?> findAllCityByRating(HotelDto hotelDto);
 }

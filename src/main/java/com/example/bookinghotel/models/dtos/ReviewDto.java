@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @Data
 public class ReviewDto {
     Long id;
-    User guest;
-    Hotel hotel;
+    UserDto guest;
+    HotelDto hotel;
     LocalDate date;
     byte score;
     String text;

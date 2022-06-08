@@ -1,5 +1,6 @@
 package com.example.bookinghotel.models.entities;
 
+import com.example.bookinghotel.models.enums.EStatusBooking;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -27,7 +28,8 @@ public class Booking {
     @JoinColumn(name = "guest_id")
     User guest;
     String comment;
-    boolean active;
     float priceOfBook;
+    @Enumerated(EnumType.STRING)
+    EStatusBooking statusBooking;
 
 }

@@ -5,6 +5,7 @@ import com.example.bookinghotel.mappers.HotelMapper;
 import com.example.bookinghotel.models.dtos.HotelDto;
 import com.example.bookinghotel.models.entities.Hotel;
 import com.example.bookinghotel.models.response.Message;
+import com.example.bookinghotel.services.BookingService;
 import com.example.bookinghotel.services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 public class HotelServiceImpl implements HotelService {
     @Autowired
     private HotelDao hotelDao;
+    @Autowired
+    private BookingService bookingService;
     private final HotelMapper hotelMapper = HotelMapper.INSTANCE;
 
     @Override
@@ -47,5 +50,10 @@ public class HotelServiceImpl implements HotelService {
         }else{
             return new ResponseEntity<>(Message.of("Hotel not deleted"), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public ResponseEntity<?> findAllCityByRating(HotelDto hotelDto) {
+        return null;
     }
 }

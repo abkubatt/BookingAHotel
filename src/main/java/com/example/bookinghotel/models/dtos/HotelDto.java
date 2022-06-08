@@ -3,6 +3,8 @@ package com.example.bookinghotel.models.dtos;
 import com.example.bookinghotel.models.entities.City;
 import lombok.Data;
 
+import java.util.List;
+
 
 @Data
 public class HotelDto {
@@ -11,10 +13,10 @@ public class HotelDto {
     String description;
     String address;
     byte star;
-    String photos;
+    List<String> photos;
     String phone;
     byte currentScore;
     String email;
-    City city;
+    CityDto city;
     boolean active;
 }

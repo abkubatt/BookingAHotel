@@ -2,6 +2,7 @@ package com.example.bookinghotel.models.dtos;
 
 import com.example.bookinghotel.models.entities.Hotel;
 import com.example.bookinghotel.models.enums.EBedType;
+import com.example.bookinghotel.models.enums.EStatusBooking;
 import com.example.bookinghotel.models.enums.ETypeOfView;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ public class RoomDto {
     EBedType bedType;
     float square;
     boolean wifi;
-    Hotel hotel;
+    HotelDto hotel;
     ETypeOfView typeOfView;
-    boolean active;
+    EStatusBooking statusBooking;
 }

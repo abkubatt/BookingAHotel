@@ -9,11 +9,11 @@ import java.time.LocalDate;
 @Data
 public class BookingDto {
     Long id;
-    Hotel hotel;
-    Room room;
+    HotelDto hotel;
+    RoomDto room;
     LocalDate checkInDate;
     LocalDate checkOutDate;
-    User guest;
+    UserDto guest;
     String comment;
     boolean active;
     float priceOfBook;

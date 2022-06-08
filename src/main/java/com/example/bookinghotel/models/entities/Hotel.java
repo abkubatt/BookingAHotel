@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Table(name = "hotel")
@@ -19,7 +20,7 @@ public class Hotel {
     String description;
     String address;
     byte star;
-    String photos;
+    List<String> photos;
     String phone;
     byte currentScore;
     String email;

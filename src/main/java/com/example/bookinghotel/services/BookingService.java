@@ -10,4 +10,8 @@ public interface BookingService {
     ResponseEntity<?> update(BookingDto bookingDto);
 
     ResponseEntity<?> delete(BookingDto bookingDto);
+
+    BookingDto findByIdSecond(Long id);
+
+    ResponseEntity<?> cancelBooking(BookingDto bookingDto, String comment, Long userId);
 }

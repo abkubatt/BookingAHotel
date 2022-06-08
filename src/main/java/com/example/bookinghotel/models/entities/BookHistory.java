@@ -1,5 +1,6 @@
 package com.example.bookinghotel.models.entities;
 
+import com.example.bookinghotel.models.enums.EStatusBooking;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -32,7 +33,8 @@ public class BookHistory {
     @ManyToOne
     @JoinColumn(name = "changed_user_id")
     User user;
-    boolean bookActive;
     boolean active;
+    @Enumerated(EnumType.STRING)
+    EStatusBooking statusBooking;
 
 }
