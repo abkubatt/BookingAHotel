@@ -1,5 +1,6 @@
 package com.example.bookinghotel.services.Impl;
 
+import com.example.bookinghotel.Exceptions.CancelBookingErrorException;
 import com.example.bookinghotel.dao.BookingDao;
 import com.example.bookinghotel.mappers.BookingMapper;
 import com.example.bookinghotel.mappers.RoomMapper;
@@ -48,9 +49,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public ResponseEntity<?> update(BookingDto bookingDto) {
         boolean isExists = bookingDao.existsById(bookingDto.getId());
-        if (!isExists){
+        if (!isExists) {
             return new ResponseEntity<>(Message.of("User not found"), HttpStatus.NOT_FOUND);
-        }else {
+        } else {
             Booking booking = bookingMapper.toEntity(bookingDto);
             Booking updatedBooking = bookingDao.save(booking);
             return new ResponseEntity<>(updatedBooking, HttpStatus.OK);
@@ -63,9 +64,9 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingMapper.toEntity(bookingDto);
         booking.setStatusBooking(EStatusBooking.INACTIVE);
         ResponseEntity<?> bookingDeleted = update(bookingMapper.toDto(booking));
-        if(bookingDeleted.getStatusCode().equals(HttpStatus.OK)){
-            return new ResponseEntity<>(bookingDeleted,HttpStatus.OK);
-        }else{
+        if (bookingDeleted.getStatusCode().equals(HttpStatus.OK)) {
+            return new ResponseEntity<>(bookingDeleted, HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(Message.of("Booking not deleted"), HttpStatus.NOT_FOUND);
         }
     }
@@ -81,31 +82,34 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public ResponseEntity<?> cancelBooking(BookingDto bookingDto, String comment, Long userId) {
-        BookingDto bookingDto2 = findByIdSecond(bookingDto.getId());
-        Booking entityBooking = bookingMapper.toEntity(bookingDto2);
-        entityBooking.setStatusBooking(EStatusBooking.INACTIVE);
-        UserDto userDto = userService.findById(userId);
+    public ResponseEntity<?> cancelBooking(Long bookingId, String comment, Long userId) {
+        try {
+            BookingDto bookingDto2 = findByIdSecond(bookingId);
+            Booking entityBooking = bookingMapper.toEntity(bookingDto2);
+            entityBooking.setStatusBooking(EStatusBooking.INACTIVE);
+            UserDto userDto = userService.findById(userId);
 
 
-        BookHistoryDto bookHistory = new BookHistoryDto();
-        bookHistory.setBooking(bookingDto);
-        bookHistory.setChangeDate(LocalDate.now());
-        bookHistory.setComment(comment);
-        bookHistory.setRoom(roomMapper.toDto(entityBooking.getRoom()));
-        bookHistory.setCheckInDate(entityBooking.getCheckInDate());
-        bookHistory.setCheckOutDate(entityBooking.getCheckOutDate());
-        bookHistory.setUser(userDto);
-        bookHistory.setUser(userMapper.toDto(entityBooking.getGuest()));
-        bookHistory.setStatusBooking(entityBooking.getStatusBooking());
-        ResponseEntity<?> savedBookingHistory = bookHistoryService.save(bookHistory);
+            BookHistoryDto bookHistory = new BookHistoryDto();
+            bookHistory.setBooking(bookingDto2);
+            bookHistory.setChangeDate(LocalDate.now());
+            bookHistory.setComment(comment);
+            bookHistory.setRoom(roomMapper.toDto(entityBooking.getRoom()));
+            bookHistory.setCheckInDate(entityBooking.getCheckInDate());
+            bookHistory.setCheckOutDate(entityBooking.getCheckOutDate());
+            bookHistory.setUser(userDto);
+            bookHistory.setUser(userMapper.toDto(entityBooking.getGuest()));
+            bookHistory.setStatusBooking(entityBooking.getStatusBooking());
 
-        ResponseEntity<?> canceledBooking = update(bookingMapper.toDto(entityBooking));
 
-        if (canceledBooking.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK)){
-            return new ResponseEntity<>(canceledBooking, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(Message.of("Booking not canceled"), HttpStatus.NOT_MODIFIED);
+            ResponseEntity<?> savedBookingHistory = bookHistoryService.save(bookHistory);
+            ResponseEntity<?> canceledBooking = update(bookingMapper.toDto(entityBooking));
+            if (canceledBooking.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK)) {
+                return new ResponseEntity<>(canceledBooking, HttpStatus.OK);
+            }
+        } catch (CancelBookingErrorException c) {
+            return new ResponseEntity<>(c.getMessage(), HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
     }
 }
