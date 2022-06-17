@@ -21,7 +21,9 @@ public class Hotel {
     String description;
     String address;
     byte star;
-    List<String> photos;
+    @OneToMany
+    @JoinColumn(name = "photo_id")
+    List<Photo> images;
     String phone;
     double currentScore;
     String email;

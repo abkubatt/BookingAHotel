@@ -1,15 +1,18 @@
 package com.example.bookinghotel.configuration;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+//@EnableAutoConfiguration
 @Component
-public class MailSender {
+public class EMailSender {
     @Autowired
     private JavaMailSender emailSender;
 

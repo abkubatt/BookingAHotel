@@ -3,9 +3,11 @@ package com.example.bookinghotel.controllers;
 import com.example.bookinghotel.models.dtos.BookingDto;
 import com.example.bookinghotel.models.dtos.HotelDto;
 import com.example.bookinghotel.models.dtos.ReplyToReviewDto;
+import com.example.bookinghotel.models.dtos.RoomDto;
 import com.example.bookinghotel.services.BookingService;
 import com.example.bookinghotel.services.HotelService;
 import com.example.bookinghotel.services.ReplyToReviewService;
+import com.example.bookinghotel.services.RoomService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,9 @@ public class ManagerController {
 
     @Autowired
     ReplyToReviewService replyToReviewService;
-    @PutMapping("/updateHotel")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
-    public ResponseEntity<?> updateHotel(@RequestBody HotelDto hotelDto){
-        return hotelService.update(hotelDto);
-    }
+    @Autowired
+    RoomService roomService;
+
     @PostMapping("saveBooking")
     @PreAuthorize("hasRole('MANAGER') or hasRole('GUEST')")
     public ResponseEntity<?> saveBooking(@RequestBody BookingDto bookingDto){
@@ -40,6 +40,10 @@ public class ManagerController {
     @PostMapping("/saveReplyToReview")
     public ResponseEntity<?> saveReplyToReview(@RequestBody ReplyToReviewDto replyToReviewDto){
         return replyToReviewService.save(replyToReviewDto);
+    }
+    @PutMapping("/saveRoom")
+    public ResponseEntity<?> saveRoom(@RequestBody RoomDto roomDto){
+        return roomService.save(roomDto);
     }
 
 }

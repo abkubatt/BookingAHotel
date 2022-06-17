@@ -18,20 +18,18 @@ public class GuestController {
     private ReviewService reviewService;
 
 
-    @PostMapping("saveBooking")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('GUEST')")
-    public ResponseEntity<?> saveBooking(@RequestBody BookingDto bookingDto){
-        return bookingService.save(bookingDto);
-    }
-    @PutMapping("cancelBooking")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('GUEST')")
-    public ResponseEntity<?> cancelBooking(@RequestParam Long bookingId,@RequestParam String comment,@RequestParam Long userId){
-        return bookingService.cancelBooking(bookingId,comment,userId);
-    }
     @PostMapping("/saveReview")
     public ResponseEntity<?> saveReview(@RequestBody ReviewDto reviewDto){
         return reviewService.save(reviewDto);
     }
 
+    @PutMapping("/updateReview")
+    public ResponseEntity<?> updateReview(@RequestBody ReviewDto reviewDto){
+        return reviewService.update(reviewDto);
+    }
+    @PutMapping("/deleteReview")
+    public ResponseEntity<?> deleteReview(@RequestBody ReviewDto reviewDto){
+        return reviewService.delete(reviewDto);
+    }
 
 }

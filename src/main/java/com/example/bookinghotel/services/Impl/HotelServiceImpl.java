@@ -97,8 +97,6 @@ public class HotelServiceImpl implements HotelService {
     }
 
 
-
-
     @Override
     public List<HotelDto> findAllHotelsByCity(Long cityId) {
         CityDto cityDto = cityService.findById(cityId);

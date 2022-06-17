@@ -2,7 +2,7 @@ package com.example.bookinghotel.services.Impl;
 
 import com.example.bookinghotel.Exceptions.BookingException;
 import com.example.bookinghotel.Exceptions.CancelBookingErrorException;
-import com.example.bookinghotel.configuration.MailSender;
+import com.example.bookinghotel.configuration.EMailSender;
 import com.example.bookinghotel.dao.BookingDao;
 import com.example.bookinghotel.mappers.BookingMapper;
 import com.example.bookinghotel.mappers.RoomMapper;
@@ -22,16 +22,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Service
 public class BookingServiceImpl implements BookingService {
     @Autowired
     private BookingDao bookingDao;
     @Autowired
-    private MailSender emailSender;
+    private EMailSender emailSender;
     @Autowired
     private BookHistoryService bookHistoryService;
     private RoomMapper roomMapper = RoomMapper.INSTANCE;
@@ -95,6 +95,7 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
+    @Transactional
     public ResponseEntity<?> cancelBooking(Long bookingId, String comment, Long userId) {
         try {
             BookingDto bookingDto2 = findByIdSecond(bookingId);
@@ -111,7 +112,7 @@ public class BookingServiceImpl implements BookingService {
             bookHistory.setCheckInDate(entityBooking.getCheckInDate());
             bookHistory.setCheckOutDate(entityBooking.getCheckOutDate());
             bookHistory.setUser(userDto);
-            bookHistory.setUser(userMapper.toDto(entityBooking.getGuest()));
+            bookHistory.setGuest(userMapper.toDto(entityBooking.getGuest()));
             bookHistory.setStatusBooking(entityBooking.getStatusBooking());
 
 
