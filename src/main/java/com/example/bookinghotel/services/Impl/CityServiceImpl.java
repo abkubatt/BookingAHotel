@@ -49,4 +49,14 @@ public class CityServiceImpl implements CityService {
 
         }
     }
+
+    @Override
+    public CityDto findById(Long cityId) {
+        City city = cityDao.findById(cityId).orElse(null);
+        if (city != null){
+            return cityMapper.toDto(city);
+        }else{
+            return null;
+        }
+    }
 }

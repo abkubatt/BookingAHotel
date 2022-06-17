@@ -22,7 +22,7 @@ public class Review {
     @JoinColumn(name = "hotel_id")
     Hotel hotel;
     LocalDate date;
-    byte score;
+    double score;
     String text;
     boolean active;
 

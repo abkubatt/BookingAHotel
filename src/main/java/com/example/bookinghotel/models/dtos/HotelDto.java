@@ -1,6 +1,7 @@
 package com.example.bookinghotel.models.dtos;
 
 import com.example.bookinghotel.models.entities.City;
+import com.example.bookinghotel.models.enums.EHotelStatus;
 import lombok.Data;
 
 import java.util.List;
@@ -15,8 +16,8 @@ public class HotelDto {
     byte star;
     List<String> photos;
     String phone;
-    byte currentScore;
+    double currentScore;
     String email;
     CityDto city;
-    boolean active;
+    EHotelStatus hotelStatus;
 }

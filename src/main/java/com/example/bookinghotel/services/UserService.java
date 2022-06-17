@@ -8,4 +8,6 @@ public interface UserService {
     ResponseEntity<?> save(UserDto userDto);
     ResponseEntity<?> update(UserDto userDto);
     ResponseEntity<?> delete(UserDto userDto);
+
+    UserDto findById(Long userId);
 }

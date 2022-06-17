@@ -1,7 +1,7 @@
 package com.example.bookinghotel.models.enums;
 
-public enum EStatusBooking {
+public enum EHotelStatus {
     ACTIVE,
     INACTIVE,
-
+    NOT_AVAILABLE
 }

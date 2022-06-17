@@ -1,5 +1,6 @@
 package com.example.bookinghotel.models.entities;
 
+import com.example.bookinghotel.models.enums.EHotelStatus;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -22,12 +23,13 @@ public class Hotel {
     byte star;
     List<String> photos;
     String phone;
-    byte currentScore;
+    double currentScore;
     String email;
     @ManyToOne
     @JoinColumn(name = "city_id")
     City city;
-    boolean active;
+    @Enumerated(EnumType.STRING)
+    EHotelStatus hotelStatus;
 
 }
 

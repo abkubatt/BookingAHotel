@@ -14,6 +14,7 @@ import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.BookHistoryService;
 import com.example.bookinghotel.services.BookingService;
 
+import com.example.bookinghotel.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,8 @@ public class BookingServiceImpl implements BookingService {
     private BookHistoryService bookHistoryService;
     private RoomMapper roomMapper = RoomMapper.INSTANCE;
     private UserMapper userMapper = UserMapper.INSTANCE;
+    @Autowired
+    private UserService userService;
 
     private final BookingMapper bookingMapper = BookingMapper.INSTANCE;
 
@@ -82,6 +85,8 @@ public class BookingServiceImpl implements BookingService {
         BookingDto bookingDto2 = findByIdSecond(bookingDto.getId());
         Booking entityBooking = bookingMapper.toEntity(bookingDto2);
         entityBooking.setStatusBooking(EStatusBooking.INACTIVE);
+        UserDto userDto = userService.findById(userId);
+
 
         BookHistoryDto bookHistory = new BookHistoryDto();
         bookHistory.setBooking(bookingDto);
@@ -90,7 +95,7 @@ public class BookingServiceImpl implements BookingService {
         bookHistory.setRoom(roomMapper.toDto(entityBooking.getRoom()));
         bookHistory.setCheckInDate(entityBooking.getCheckInDate());
         bookHistory.setCheckOutDate(entityBooking.getCheckOutDate());
-        bookHistory.setUser(userId);
+        bookHistory.setUser(userDto);
         bookHistory.setUser(userMapper.toDto(entityBooking.getGuest()));
         bookHistory.setStatusBooking(entityBooking.getStatusBooking());
         ResponseEntity<?> savedBookingHistory = bookHistoryService.save(bookHistory);

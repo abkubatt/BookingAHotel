@@ -1,7 +1,11 @@
 package com.example.bookinghotel.services;
 
+import com.example.bookinghotel.models.dtos.CityDto;
 import com.example.bookinghotel.models.dtos.HotelDto;
 import org.springframework.http.ResponseEntity;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public interface HotelService {
 
@@ -9,7 +13,18 @@ public interface HotelService {
 
     ResponseEntity<?> update(HotelDto hotelDto);
 
-    ResponseEntity<?> delete(HotelDto hotelDto);
+    HotelDto findById(Long hotelId);
 
-    ResponseEntity<?> findAllCityByRating(HotelDto hotelDto);
+    ResponseEntity<?> delete(Long hotelId);
+    ResponseEntity<?> blockHotel(Long hotelId);
+
+    ResponseEntity<?> findAllHotelsByRating(HotelDto hotelDto);
+
+    List<HotelDto> findAllHotelsByCity(Long cityId);
+
+    void countCurrentScore();
+
+    List<HotelDto> findAll();
+
+    ResponseEntity<?> filter(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, int guestsAmount);
 }
