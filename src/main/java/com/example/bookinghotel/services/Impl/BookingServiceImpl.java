@@ -1,6 +1,8 @@
 package com.example.bookinghotel.services.Impl;
 
+import com.example.bookinghotel.Exceptions.BookingException;
 import com.example.bookinghotel.Exceptions.CancelBookingErrorException;
+import com.example.bookinghotel.configuration.MailSender;
 import com.example.bookinghotel.dao.BookingDao;
 import com.example.bookinghotel.mappers.BookingMapper;
 import com.example.bookinghotel.mappers.RoomMapper;
@@ -29,6 +31,8 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private BookingDao bookingDao;
     @Autowired
+    private MailSender emailSender;
+    @Autowired
     private BookHistoryService bookHistoryService;
     private RoomMapper roomMapper = RoomMapper.INSTANCE;
     private UserMapper userMapper = UserMapper.INSTANCE;
@@ -39,11 +43,20 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public ResponseEntity<?> save(BookingDto bookingDto) {
-        Booking booking = bookingMapper.toEntity(bookingDto);
-        booking.setStatusBooking(EStatusBooking.ACTIVE);
-        Booking bookingSaved = bookingDao.save(booking);
-        return new ResponseEntity<>(bookingSaved, HttpStatus.OK);
+    public ResponseEntity<?> save(BookingDto bookingDto) throws BookingException {
+        try {
+            Booking booking = bookingMapper.toEntity(bookingDto);
+            booking.setStatusBooking(EStatusBooking.ACTIVE);
+            Booking bookingSaved = bookingDao.save(booking);
+            ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
+            if (sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK)){
+                return new ResponseEntity<>(bookingSaved, HttpStatus.OK);
+            }
+        }catch (BookingException b){
+            BookingException bookingException = new BookingException("Error while booking");
+            return new ResponseEntity<>(bookingException.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
     }
 
     @Override
@@ -104,12 +117,35 @@ public class BookingServiceImpl implements BookingService {
 
             ResponseEntity<?> savedBookingHistory = bookHistoryService.save(bookHistory);
             ResponseEntity<?> canceledBooking = update(bookingMapper.toDto(entityBooking));
-            if (canceledBooking.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK)) {
+            ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode2(entityBooking.getGuest().getEmail());
+            if (canceledBooking.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK)) {
                 return new ResponseEntity<>(canceledBooking, HttpStatus.OK);
             }
         } catch (CancelBookingErrorException c) {
-            return new ResponseEntity<>(c.getMessage(), HttpStatus.NOT_FOUND);
+            CancelBookingErrorException cancelBooking = new CancelBookingErrorException("Error while cancelling booking");
+            return new ResponseEntity<>(cancelBooking.getMessage(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
+    }
+
+
+
+    @Override
+    public ResponseEntity<?> sendCode(String email) {
+        try {
+            emailSender.sendSimpleMessage(email, "You have successfully booked a hotel", ".");
+            return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(Message.of("Error while sending code to email"), HttpStatus.NOT_IMPLEMENTED);
+        }
+    }
+    @Override
+    public ResponseEntity<?> sendCode2(String email) {
+        try {
+            emailSender.sendSimpleMessage(email, "You have successfully canceled your hotel reservation", ".");
+            return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(Message.of("Error while sending code to email"), HttpStatus.NOT_IMPLEMENTED);
+        }
     }
 }
