@@ -3,6 +3,7 @@ package com.example.bookinghotel.models.dtos;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -11,7 +12,9 @@ import java.time.LocalDate;
 public class PriceDto {
     Long id;
     float price;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate endDate;
     RoomDto room;
     boolean active;

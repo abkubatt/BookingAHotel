@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Table(name = "tb_room")
@@ -27,5 +28,7 @@ public class Room {
     @Enumerated(EnumType.STRING)
     ETypeOfView typeOfView;
     boolean active;
-
+    @OneToMany
+    @JoinColumn(name = "photo_id")
+    List<Photo> photos;
 }
