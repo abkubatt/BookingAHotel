@@ -43,8 +43,8 @@ public class ManagerController {
         return replyToReviewService.save(replyToReviewDto);
     }
     @PostMapping("/saveRoom")
-    public ResponseEntity<?> saveRoom(@RequestBody RoomDto roomDto){
-        return roomService.save(roomDto);
+    public ResponseEntity<?> saveRoom(@RequestBody RoomDto roomDto,@RequestBody PriceDto priceDto){
+        return roomService.save(roomDto,priceDto);
     }
 
     @PutMapping("/updateRoom")
@@ -56,10 +56,10 @@ public class ManagerController {
         return roomService.delete(roomDto);
     }
 
-    @PostMapping("/savePrice")
-    public ResponseEntity<?> savePrice(@RequestBody PriceDto priceDto){
-        return priceService.save(priceDto);
-    }
+//    @PostMapping("/savePrice")
+//    public ResponseEntity<?> savePrice(@RequestBody PriceDto priceDto){
+//        return priceService.save(priceDto);
+//    }
     @PutMapping("/updatePrice")
     public ResponseEntity<?> updatePrice(@RequestBody PriceDto priceDto){
         return priceService.update(priceDto);

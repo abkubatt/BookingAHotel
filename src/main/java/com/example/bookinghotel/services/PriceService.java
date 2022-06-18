@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface PriceService {
 
-    ResponseEntity<?> save(PriceDto priceDto);
+    PriceDto save(PriceDto priceDto);
     ResponseEntity<?> update(PriceDto priceDto);
     ResponseEntity<?> delete(PriceDto priceDto);
 }

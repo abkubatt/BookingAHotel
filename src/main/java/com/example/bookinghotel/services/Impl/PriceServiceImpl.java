@@ -18,11 +18,11 @@ public class PriceServiceImpl implements PriceService {
     private final PriceMapper priceMapper = PriceMapper.INSTANCE;
 
     @Override
-    public ResponseEntity<?> save(PriceDto priceDto) {
+    public PriceDto save(PriceDto priceDto) {
         Price price = priceMapper.toEntity(priceDto);
         price.setActive(true);
         Price savePrice = priceDao.save(price);
-        return new ResponseEntity<>(savePrice, HttpStatus.OK);
+        return priceMapper.toDto(savePrice);
     }
 
     @Override

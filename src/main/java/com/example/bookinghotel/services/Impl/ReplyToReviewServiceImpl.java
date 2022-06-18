@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class ReplyToReviewServiceImpl implements ReplyToReviewService {
     @Autowired
@@ -20,6 +22,7 @@ public class ReplyToReviewServiceImpl implements ReplyToReviewService {
     @Override
     public ResponseEntity<?> save(ReplyToReviewDto replyToReviewDto) {
         ReplyToReview replyToReview = replyToReviewMapper.toEntity(replyToReviewDto);
+        replyToReview.setDate(LocalDate.now());
         ReplyToReview saveReplyToReview = replyToReviewDao.save(replyToReview);
         return new ResponseEntity<>(saveReplyToReview, HttpStatus.OK);
     }
