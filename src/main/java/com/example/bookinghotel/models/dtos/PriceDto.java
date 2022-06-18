@@ -16,6 +16,6 @@ public class PriceDto {
     LocalDate startDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate endDate;
-    RoomDto room;
+    //RoomDto room;
     boolean active;
 }

@@ -43,13 +43,31 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
+    @Transactional
     public ResponseEntity<?> save(BookingDto bookingDto) throws BookingException {
         try {
             Booking booking = bookingMapper.toEntity(bookingDto);
             booking.setStatusBooking(EStatusBooking.ACTIVE);
+
+
+            BookHistoryDto bookHistory = new BookHistoryDto();
+
+            bookHistory.setBooking(bookingMapper.toDto(booking));
+            bookHistory.setChangeDate(LocalDate.now());
+            bookHistory.setComment(booking.getComment());
+            bookHistory.setRoom(roomMapper.toDto(booking.getRoom()));
+            bookHistory.setCheckInDate(bookHistory.getCheckInDate());
+            bookHistory.setCheckOutDate(booking.getCheckOutDate());
+            bookHistory.setUser(userMapper.toDto(booking.getGuest()));
+            bookHistory.setGuest(userMapper.toDto(booking.getGuest()));
+            bookHistory.setStatusBooking(booking.getStatusBooking());
+
+            ResponseEntity<?> saveBookHistory = bookHistoryService.save(bookHistory);
             Booking bookingSaved = bookingDao.save(booking);
-           // ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
+           ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
           //  if (sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK)){
+
+         //   if (bookHistory.getStatusBooking().equals(HttpStatus.OK && saveBookHistory.getStatusCode().equals(HttpStatus.OK && sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK))))
                 return new ResponseEntity<>(bookingSaved, HttpStatus.OK);
          //   }
         }catch (BookingException b){

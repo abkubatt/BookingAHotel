@@ -31,4 +31,7 @@ public class Room {
     @OneToMany
     @JoinColumn(name = "photo_id")
     List<Photo> photos;
+    @ManyToOne
+    @JoinColumn(name = "price_id")
+    Price price;
 }

@@ -21,4 +21,5 @@ public class RoomDto {
     ETypeOfView typeOfView;
     boolean active;
     List<PhotoDto> photos;
+    PriceDto price;
 }
