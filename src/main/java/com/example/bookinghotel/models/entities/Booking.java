@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data
-@Table(name = "booking")
+@Table(name = "tb_booking")
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Booking {

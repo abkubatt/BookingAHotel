@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +23,7 @@ public class AdminController {
         return hotelService.save(hotelDto);
     }
     @PutMapping("updateHotel")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<?> updateHotel(@RequestBody HotelDto hotelDto){
         return hotelService.update(hotelDto);
     }
@@ -36,6 +35,11 @@ public class AdminController {
     @PutMapping("/blockHotel")
     public ResponseEntity<?> blockHotel(@RequestParam Long hotelId){
         return hotelService.blockHotel(hotelId);
+    }
+
+    @PutMapping("/confirmHotel")
+    public ResponseEntity<?> confirmHotel(@RequestParam Long hotelId){
+        return hotelService.confirm(hotelId);
     }
 
     @PostMapping("/saveUser")

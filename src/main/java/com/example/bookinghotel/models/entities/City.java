@@ -7,7 +7,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 
 @Data
-@Table(name = "city")
+@Table(name = "tb_city")
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class City {

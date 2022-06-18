@@ -7,7 +7,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "photo")
+@Table(name = "tb_photo")
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Photo {
@@ -15,6 +15,6 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String link;
-    int order;
+    int position;
 
 }

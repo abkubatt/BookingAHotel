@@ -6,7 +6,6 @@ import com.example.bookinghotel.services.BookingService;
 import com.example.bookinghotel.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

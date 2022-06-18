@@ -36,7 +36,7 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public ResponseEntity<?> save(HotelDto hotelDto) {
         Hotel hotel = hotelMapper.toEntity(hotelDto);
-        hotel.setHotelStatus(EHotelStatus.ACTIVE);
+        hotel.setHotelStatus(EHotelStatus.NOT_AVAILABLE);
         Hotel saveHotel = hotelDao.save(hotel);
         return new ResponseEntity<>(saveHotel, HttpStatus.OK);
     }
@@ -82,12 +82,27 @@ public class HotelServiceImpl implements HotelService {
             return new ResponseEntity<>(Message.of("Hotel not found"),HttpStatus.NOT_FOUND);
         }
         Hotel hotel = hotelMapper.toEntity(hotelDto);
-        hotel.setHotelStatus(EHotelStatus.NOT_AVAILABLE);
+        hotel.setHotelStatus(EHotelStatus.BLOCK);
         ResponseEntity<?> blockHotel = update(hotelMapper.toDto(hotel));
         if (blockHotel.getStatusCode().equals(HttpStatus.OK)){
             return new ResponseEntity<>(blockHotel, HttpStatus.OK);
         }else{
             return new ResponseEntity<>(Message.of("Hotel not blocked"), HttpStatus.NOT_FOUND);
+        }
+    }
+    @Override
+    public ResponseEntity<?> confirm(Long hotelId) {
+        HotelDto hotelDto = findById(hotelId);
+        if (hotelDto == null){
+            return new ResponseEntity<>(Message.of("Hotel not found"),HttpStatus.NOT_FOUND);
+        }
+        Hotel hotel = hotelMapper.toEntity(hotelDto);
+        hotel.setHotelStatus(EHotelStatus.ACTIVE);
+        ResponseEntity<?> blockHotel = update(hotelMapper.toDto(hotel));
+        if (blockHotel.getStatusCode().equals(HttpStatus.OK)){
+            return new ResponseEntity<>(blockHotel, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(Message.of("Hotel not confirmed"), HttpStatus.NOT_FOUND);
         }
     }
 

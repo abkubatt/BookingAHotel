@@ -4,10 +4,14 @@ import com.example.bookinghotel.models.entities.Booking;
 import com.example.bookinghotel.models.entities.Room;
 import com.example.bookinghotel.models.entities.User;
 import com.example.bookinghotel.models.enums.EStatusBooking;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
 import java.time.LocalDate;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookHistoryDto {
     Long id;
     BookingDto booking;

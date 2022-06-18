@@ -2,12 +2,15 @@ package com.example.bookinghotel.models.dtos;
 
 import com.example.bookinghotel.models.entities.City;
 import com.example.bookinghotel.models.enums.EHotelStatus;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class HotelDto {
     Long id;
     String name;

@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data
-@Table(name = "review")
+@Table(name = "tb_review")
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Review {

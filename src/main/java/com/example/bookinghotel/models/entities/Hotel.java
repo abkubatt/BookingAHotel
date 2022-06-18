@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Data
-@Table(name = "hotel")
+@Table(name = "tb_hotel")
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Hotel {

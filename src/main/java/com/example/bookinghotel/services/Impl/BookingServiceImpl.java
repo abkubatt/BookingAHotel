@@ -48,15 +48,15 @@ public class BookingServiceImpl implements BookingService {
             Booking booking = bookingMapper.toEntity(bookingDto);
             booking.setStatusBooking(EStatusBooking.ACTIVE);
             Booking bookingSaved = bookingDao.save(booking);
-            ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
-            if (sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK)){
+           // ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
+          //  if (sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK)){
                 return new ResponseEntity<>(bookingSaved, HttpStatus.OK);
-            }
+         //   }
         }catch (BookingException b){
             BookingException bookingException = new BookingException("Error while booking");
             return new ResponseEntity<>(bookingException.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
-        return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
+        //return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class BookingServiceImpl implements BookingService {
 
             ResponseEntity<?> savedBookingHistory = bookHistoryService.save(bookHistory);
             ResponseEntity<?> canceledBooking = update(bookingMapper.toDto(entityBooking));
-            ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode2(entityBooking.getGuest().getEmail());
+           // ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode2(entityBooking.getGuest().getEmail());
             if (canceledBooking.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK)) {
                 return new ResponseEntity<>(canceledBooking, HttpStatus.OK);
             }

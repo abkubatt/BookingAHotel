@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Table(name = "user_tb")
+@Table(name = "tb_user")
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {

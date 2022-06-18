@@ -4,10 +4,14 @@ import com.example.bookinghotel.models.entities.Hotel;
 import com.example.bookinghotel.models.entities.Room;
 import com.example.bookinghotel.models.entities.User;
 import com.example.bookinghotel.models.enums.EStatusBooking;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
 import java.time.LocalDate;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingDto {
     Long id;
     HotelDto hotel;
@@ -16,7 +20,6 @@ public class BookingDto {
     LocalDate checkOutDate;
     UserDto guest;
     String comment;
-    boolean active;
     float priceOfBook;
     EStatusBooking statusBooking;
 

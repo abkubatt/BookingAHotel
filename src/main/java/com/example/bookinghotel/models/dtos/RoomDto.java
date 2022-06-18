@@ -4,11 +4,13 @@ import com.example.bookinghotel.models.entities.Hotel;
 import com.example.bookinghotel.models.enums.EBedType;
 import com.example.bookinghotel.models.enums.EStatusBooking;
 import com.example.bookinghotel.models.enums.ETypeOfView;
+import lombok.AccessLevel;
 import lombok.Data;
-
+import lombok.experimental.FieldDefaults;
 
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoomDto {
     Long id;
     int capacity;

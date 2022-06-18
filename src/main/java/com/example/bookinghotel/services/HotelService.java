@@ -17,6 +17,7 @@ public interface HotelService {
 
     ResponseEntity<?> delete(Long hotelId);
     ResponseEntity<?> blockHotel(Long hotelId);
+    ResponseEntity<?> confirm(Long hotelId);
 
     ResponseEntity<?> findAllHotelsByRating(HotelDto hotelDto);
 

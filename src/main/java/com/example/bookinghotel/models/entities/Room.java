@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 
 @Data
-@Table(name = "room")
+@Table(name = "tb_room")
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Room {
