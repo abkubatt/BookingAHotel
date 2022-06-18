@@ -23,7 +23,7 @@ public class Hotel {
     byte star;
     @OneToMany
     @JoinColumn(name = "photo_id")
-    List<Photo> images;
+    List<Photo> photos;
     String phone;
     double currentScore;
     String email;

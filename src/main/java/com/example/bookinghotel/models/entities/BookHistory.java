@@ -32,7 +32,7 @@ public class BookHistory {
     User guest;
     @ManyToOne
     @JoinColumn(name = "changer_user_id")
-    User userId;
+    User user;
     boolean active;
     @Enumerated(EnumType.STRING)
     EStatusBooking statusBooking;

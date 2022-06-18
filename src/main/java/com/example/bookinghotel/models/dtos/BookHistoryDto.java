@@ -18,7 +18,7 @@ public class BookHistoryDto {
     LocalDate checkInDate;
     LocalDate checkOutDate;
     UserDto guest;
-    UserDto userId;
+    UserDto user;
     boolean active;
     EStatusBooking statusBooking;
 

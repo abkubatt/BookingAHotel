@@ -1,5 +1,6 @@
 package com.example.bookinghotel.controllers;
 
+import com.example.bookinghotel.dao.PhotoDao;
 import com.example.bookinghotel.models.dtos.*;
 import com.example.bookinghotel.models.entities.Price;
 import com.example.bookinghotel.models.entities.Room;
@@ -24,6 +25,8 @@ public class ManagerController {
     RoomService roomService;
     @Autowired
     PriceService priceService;
+    @Autowired
+    PhotoService photoService;
 
     @PostMapping("saveBooking")
     //@PreAuthorize("hasRole('MANAGER') or hasRole('GUEST')")
@@ -64,6 +67,18 @@ public class ManagerController {
     @PutMapping("/deletePrice")
     public ResponseEntity<?> deletePrice(@RequestBody PriceDto priceDto){
         return priceService.delete(priceDto);
+    }
+    @PostMapping("/savePhoto")
+    public ResponseEntity<?> savePhoto(@RequestBody PhotoDto photoDto){
+        return photoService.savePhoto(photoDto);
+    }
+    @PutMapping("/updatePhoto")
+    public ResponseEntity<?> updatePhoto(@RequestBody PhotoDto photoDto){
+        return photoService.updatePhoto(photoDto);
+    }
+    @DeleteMapping("/deletePhoto")
+    public ResponseEntity<?> deletePhoto(@RequestParam Long photoId){
+        return photoService.deletePhoto(photoId);
     }
 
 
