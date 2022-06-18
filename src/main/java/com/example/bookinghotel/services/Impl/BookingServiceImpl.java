@@ -64,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
 
             ResponseEntity<?> saveBookHistory = bookHistoryService.save(bookHistory);
             Booking bookingSaved = bookingDao.save(booking);
-           ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
+              //ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
           //  if (sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK)){
 
          //   if (bookHistory.getStatusBooking().equals(HttpStatus.OK && saveBookHistory.getStatusCode().equals(HttpStatus.OK && sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK))))

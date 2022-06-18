@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -28,6 +29,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ResponseEntity<?> save(ReviewDto reviewDto) {
         Review review = reviewMapper.toEntity(reviewDto);
         review.setActive(true);
+        review.setDate(LocalDate.now());
         Review saveReview = reviewDao.save(review);
         return new ResponseEntity<>(saveReview, HttpStatus.OK);
     }
