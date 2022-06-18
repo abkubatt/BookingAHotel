@@ -18,6 +18,8 @@ public class AdminController {
     private HotelService hotelService;
     @Autowired UserService userService;
 
+    @Autowired
+    CityService cityService;
     @PostMapping("/saveHotel")
     public ResponseEntity<?> saveHotel(@RequestBody HotelDto hotelDto){
         return hotelService.save(hotelDto);
@@ -53,6 +55,19 @@ public class AdminController {
     @PutMapping("/deleteUser")
     public ResponseEntity<?> deleteUser(@RequestBody UserDto userDto){
         return userService.delete(userDto);
+    }
+
+    @PostMapping("/saveCity")
+    public ResponseEntity<?> saveCity(@RequestBody CityDto cityDto){
+        return cityService.save(cityDto);
+    }
+    @PutMapping("/updateCity")
+    public ResponseEntity<?> updateCity(@RequestBody CityDto cityDto){
+        return cityService.update(cityDto);
+    }
+    @PutMapping("deleteCity")
+    public ResponseEntity<?> deleteCity(@RequestBody CityDto cityDto){
+        return cityService.delete(cityDto);
     }
 
 }

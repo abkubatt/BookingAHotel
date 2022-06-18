@@ -1,7 +1,5 @@
 package com.example.bookinghotel.models.dtos;
 
-import com.example.bookinghotel.models.entities.Review;
-import com.example.bookinghotel.models.entities.User;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;

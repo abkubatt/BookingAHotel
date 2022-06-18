@@ -1,6 +1,5 @@
 package com.example.bookinghotel.models.dtos;
 
-import com.example.bookinghotel.models.entities.City;
 import com.example.bookinghotel.models.enums.EHotelStatus;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -17,7 +16,7 @@ public class HotelDto {
     String description;
     String address;
     byte star;
-    List<PhotoDto> photos;
+    List<PhotoDto> images;
     String phone;
     double currentScore;
     String email;

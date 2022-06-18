@@ -1,8 +1,5 @@
 package com.example.bookinghotel.models.dtos;
 
-import com.example.bookinghotel.models.entities.Hotel;
-import com.example.bookinghotel.models.entities.Room;
-import com.example.bookinghotel.models.entities.User;
 import com.example.bookinghotel.models.enums.EStatusBooking;
 import lombok.AccessLevel;
 import lombok.Data;
