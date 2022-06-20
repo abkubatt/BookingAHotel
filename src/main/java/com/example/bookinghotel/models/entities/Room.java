@@ -22,16 +22,10 @@ public class Room {
     EBedType bedType;
     float square;
     boolean wifi;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "hotel_id")
     Hotel hotel;
     @Enumerated(EnumType.STRING)
     ETypeOfView typeOfView;
     boolean active;
-    @OneToMany
-    @JoinColumn(name = "photo_id")
-    List<Photo> photos;
-    @ManyToOne
-    @JoinColumn(name = "price_id")
-    Price price;
 }

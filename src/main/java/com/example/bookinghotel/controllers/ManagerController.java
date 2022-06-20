@@ -1,15 +1,12 @@
 package com.example.bookinghotel.controllers;
 
-import com.example.bookinghotel.dao.PhotoDao;
 import com.example.bookinghotel.models.dtos.*;
-import com.example.bookinghotel.models.entities.Price;
-import com.example.bookinghotel.models.entities.Room;
+import com.example.bookinghotel.models.request.ToSaveRoom;
 import com.example.bookinghotel.services.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,10 +39,6 @@ public class ManagerController {
     public ResponseEntity<?> saveReplyToReview(@RequestBody ReplyToReviewDto replyToReviewDto){
         return replyToReviewService.save(replyToReviewDto);
     }
-    @PostMapping("/saveRoom")
-    public ResponseEntity<?> saveRoom(@RequestBody RoomDto roomDto,@RequestBody PriceDto priceDto){
-        return roomService.save(roomDto,priceDto);
-    }
 
     @PutMapping("/updateRoom")
     public ResponseEntity<?> updateRoom(@RequestBody RoomDto roomDto){
@@ -56,10 +49,7 @@ public class ManagerController {
         return roomService.delete(roomDto);
     }
 
-//    @PostMapping("/savePrice")
-//    public ResponseEntity<?> savePrice(@RequestBody PriceDto priceDto){
-//        return priceService.save(priceDto);
-//    }
+
     @PutMapping("/updatePrice")
     public ResponseEntity<?> updatePrice(@RequestBody PriceDto priceDto){
         return priceService.update(priceDto);
@@ -81,6 +71,9 @@ public class ManagerController {
         return photoService.deletePhoto(photoId);
     }
 
-
+    @PostMapping("/saveRoomRequest")
+    public ResponseEntity<?> saveRoomEntity(@RequestBody ToSaveRoom saveRoom){
+        return roomService.saveRoom(saveRoom);
+    }
 
 }

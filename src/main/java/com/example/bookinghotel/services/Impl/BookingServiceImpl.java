@@ -5,6 +5,7 @@ import com.example.bookinghotel.Exceptions.CancelBookingErrorException;
 import com.example.bookinghotel.configuration.EMailSender;
 import com.example.bookinghotel.dao.BookingDao;
 import com.example.bookinghotel.mappers.BookingMapper;
+import com.example.bookinghotel.mappers.HotelMapper;
 import com.example.bookinghotel.mappers.RoomMapper;
 import com.example.bookinghotel.mappers.UserMapper;
 import com.example.bookinghotel.models.dtos.BookHistoryDto;
@@ -13,11 +14,10 @@ import com.example.bookinghotel.models.dtos.UserDto;
 import com.example.bookinghotel.models.entities.Booking;
 
 import com.example.bookinghotel.models.enums.EStatusBooking;
+import com.example.bookinghotel.models.request.ToSaveBooking;
 import com.example.bookinghotel.models.response.Message;
-import com.example.bookinghotel.services.BookHistoryService;
-import com.example.bookinghotel.services.BookingService;
+import com.example.bookinghotel.services.*;
 
-import com.example.bookinghotel.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,48 +33,64 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private EMailSender emailSender;
     @Autowired
+    private RoomService roomService;
+    @Autowired
     private BookHistoryService bookHistoryService;
-    private RoomMapper roomMapper = RoomMapper.INSTANCE;
-    private UserMapper userMapper = UserMapper.INSTANCE;
+    @Autowired
+    private HotelService hotelService;
     @Autowired
     private UserService userService;
+
+    private HotelMapper hotelMapper = HotelMapper.INSTANCE;
+    private RoomMapper roomMapper = RoomMapper.INSTANCE;
+    private UserMapper userMapper = UserMapper.INSTANCE;
+
 
     private final BookingMapper bookingMapper = BookingMapper.INSTANCE;
 
 
     @Override
     @Transactional
-    public ResponseEntity<?> save(BookingDto bookingDto) throws BookingException {
-        try {
-            Booking booking = bookingMapper.toEntity(bookingDto);
-            booking.setStatusBooking(EStatusBooking.ACTIVE);
+    public BookingDto save(BookingDto bookingDto) {//throws BookingException {
+
+        Booking booking = bookingMapper.toEntity(bookingDto);
+        booking.setStatusBooking(EStatusBooking.ACTIVE);
 
 
-            BookHistoryDto bookHistory = new BookHistoryDto();
+        BookHistoryDto bookHistory = new BookHistoryDto();
 
-            bookHistory.setBooking(bookingMapper.toDto(booking));
-            bookHistory.setChangeDate(LocalDate.now());
-            bookHistory.setComment(booking.getComment());
-            bookHistory.setRoom(roomMapper.toDto(booking.getRoom()));
-            bookHistory.setCheckInDate(bookHistory.getCheckInDate());
-            bookHistory.setCheckOutDate(booking.getCheckOutDate());
-            bookHistory.setUser(userMapper.toDto(booking.getGuest()));
-            bookHistory.setGuest(userMapper.toDto(booking.getGuest()));
-            bookHistory.setStatusBooking(booking.getStatusBooking());
+        bookHistory.setBooking(bookingMapper.toDto(booking));
+        bookHistory.setChangeDate(LocalDate.now());
+        bookHistory.setComment(booking.getComment());
+        bookHistory.setRoom(roomMapper.toDto(booking.getRoom()));
+        bookHistory.setCheckInDate(bookHistory.getCheckInDate());
+        bookHistory.setCheckOutDate(booking.getCheckOutDate());
+        bookHistory.setUser(userMapper.toDto(booking.getGuest()));
+        bookHistory.setGuest(userMapper.toDto(booking.getGuest()));
+        bookHistory.setStatusBooking(booking.getStatusBooking());
 
-            ResponseEntity<?> saveBookHistory = bookHistoryService.save(bookHistory);
-            Booking bookingSaved = bookingDao.save(booking);
+        ResponseEntity<?> saveBookHistory = bookHistoryService.save(bookHistory);
+        Booking bookingSaved = bookingDao.save(booking);
+
+        return bookingDto;
+
               //ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
           //  if (sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK)){
 
+
          //   if (bookHistory.getStatusBooking().equals(HttpStatus.OK && saveBookHistory.getStatusCode().equals(HttpStatus.OK && sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK))))
-                return new ResponseEntity<>(bookingSaved, HttpStatus.OK);
+               // return new ResponseEntity<>(bookingSaved, HttpStatus.OK);
          //   }
-        }catch (BookingException b){
-            BookingException bookingException = new BookingException("Error while booking");
-            return new ResponseEntity<>(bookingException.getMessage(), HttpStatus.NOT_ACCEPTABLE);
-        }
+//        }catch (BookingException b){
+//            BookingException bookingException = new BookingException("Error while booking");
+//            return new ResponseEntity<>(bookingException.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+//        }
         //return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> saveBooking(ToSaveBooking saveBooking) {
+        return null;
     }
 
     @Override

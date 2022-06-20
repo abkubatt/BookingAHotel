@@ -1,8 +1,10 @@
 package com.example.bookinghotel.models.dtos;
 
+import com.example.bookinghotel.models.entities.Price;
 import com.example.bookinghotel.models.enums.EBedType;
 import com.example.bookinghotel.models.enums.ETypeOfView;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
@@ -10,6 +12,7 @@ import java.util.List;
 
 
 @Data
+//@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoomDto {
     Long id;
@@ -20,6 +23,4 @@ public class RoomDto {
     HotelDto hotel;
     ETypeOfView typeOfView;
     boolean active;
-    List<PhotoDto> photos;
-    PriceDto price;
 }

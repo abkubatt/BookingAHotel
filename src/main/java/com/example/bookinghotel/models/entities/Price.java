@@ -19,5 +19,8 @@ public class Price {
     LocalDate startDate;
     LocalDate endDate;
     boolean active;
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    Room room;
 
 }

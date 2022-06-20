@@ -4,6 +4,8 @@ import com.example.bookinghotel.models.dtos.PhotoDto;
 import com.example.bookinghotel.models.entities.Photo;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface PhotoService {
     PhotoDto save(PhotoDto photoDto);
 

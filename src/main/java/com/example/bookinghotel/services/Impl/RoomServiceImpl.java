@@ -8,11 +8,11 @@ import com.example.bookinghotel.mappers.RoomMapper;
 import com.example.bookinghotel.models.dtos.HotelDto;
 import com.example.bookinghotel.models.dtos.PriceDto;
 import com.example.bookinghotel.models.dtos.RoomDto;
-import com.example.bookinghotel.models.entities.Price;
 import com.example.bookinghotel.models.entities.Room;
-import com.example.bookinghotel.models.request.SaveRoom;
+import com.example.bookinghotel.models.request.ToSaveRoom;
 import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.HotelService;
+import com.example.bookinghotel.services.PhotoService;
 import com.example.bookinghotel.services.PriceService;
 import com.example.bookinghotel.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,39 +27,45 @@ public class RoomServiceImpl implements RoomService {
     private RoomDao roomDao;
     @Autowired
     private PriceService priceService;
+    @Autowired private PhotoService photoService;
     @Autowired
     HotelService hotelService;
     private HotelMapper hotelMapper = HotelMapper.INSTANCE;
     private final PriceMapper priceMapper = PriceMapper.INSTANCE;
     private final RoomMapper roomMapper = RoomMapper.INSTANCE;
-    private PhotoMapper photoMapper = PhotoMapper.INSTANCE;
+    private final PhotoMapper photoMapper = PhotoMapper.INSTANCE;
+    @Override
+    public RoomDto save(RoomDto roomDto) {
+        Room room = roomMapper.toEntity(roomDto);
+        room.setActive(true);
+        Room saveRoom = roomDao.save(room);
+        return roomMapper.toDto(saveRoom);
+    }
+
 
     @Override
     @Transactional
-    public ResponseEntity<?> save(SaveRoom saveRoom) {
+    public ResponseEntity<?> saveRoom(ToSaveRoom saveRoom) {
+        HotelDto hotelDto = hotelService.findById(saveRoom.getHotelId());
+
+        RoomDto room = new RoomDto();
+        room.setCapacity(saveRoom.getCapacity());
+        room.setBedType(saveRoom.getBedType());
+        room.setSquare(saveRoom.getSquare());
+        room.setWifi(saveRoom.isWifi());
+        room.setHotel(hotelDto);
+        room.setTypeOfView(saveRoom.getTypeOfView());
+        RoomDto savedRoom = save(room);
+
+
         PriceDto priceDto = new PriceDto();
         priceDto.setPrice(saveRoom.getPrice());
         priceDto.setStartDate(saveRoom.getStartDate());
         priceDto.setEndDate(saveRoom.getEndDate());
-        PriceDto savePrice = priceService.save(priceDto);
-        HotelDto hotelDto = hotelService.findById(saveRoom.getHotelId());
-        if (savePrice != null && hotelDto != null){
-            Room room = new Room();
-            room.setCapacity(saveRoom.getCapacity());
-            room.setBedType(saveRoom.getBedType());
-            room.setSquare(saveRoom.getSquare());
-            room.setWifi(saveRoom.isWifi());
-            room.setHotel(hotelMapper.toEntity(hotelDto));
-            room.setTypeOfView(saveRoom.getTypeOfView());
-            room.setPhotos(photoMapper.toEntityList(saveRoom.getPhotos()));
-            room.setPrice(priceMapper.toEntity(savePrice));
+        priceDto.setRoom(savedRoom);
+        PriceDto savedPrice = priceService.save(priceDto);
 
-            Room savedRoom = roomDao.save(room);
-            if (savedRoom == null){
-                return new ResponseEntity<>(savedRoom,HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity<>(Message.of("Error while saving Room"), HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(savedRoom, HttpStatus.OK);
     }
 
 

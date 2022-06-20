@@ -12,7 +12,7 @@ import javax.persistence.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Photo {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
     String link;
     int position;

@@ -1,11 +1,15 @@
 package com.example.bookinghotel.services;
 
 import com.example.bookinghotel.models.dtos.BookingDto;
+import com.example.bookinghotel.models.request.ToSaveBooking;
 import org.springframework.http.ResponseEntity;
 
 public interface BookingService {
 
-    ResponseEntity<?> save(BookingDto bookingDto);
+    BookingDto save(BookingDto bookingDto);
+
+    ResponseEntity<?> saveBooking(ToSaveBooking saveBooking);
+
 
     ResponseEntity<?> update(BookingDto bookingDto);
 
