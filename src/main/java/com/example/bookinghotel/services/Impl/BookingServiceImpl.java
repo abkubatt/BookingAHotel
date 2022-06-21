@@ -8,9 +8,7 @@ import com.example.bookinghotel.mappers.BookingMapper;
 import com.example.bookinghotel.mappers.HotelMapper;
 import com.example.bookinghotel.mappers.RoomMapper;
 import com.example.bookinghotel.mappers.UserMapper;
-import com.example.bookinghotel.models.dtos.BookHistoryDto;
-import com.example.bookinghotel.models.dtos.BookingDto;
-import com.example.bookinghotel.models.dtos.UserDto;
+import com.example.bookinghotel.models.dtos.*;
 import com.example.bookinghotel.models.entities.Booking;
 
 import com.example.bookinghotel.models.enums.EStatusBooking;
@@ -51,45 +49,65 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto save(BookingDto bookingDto) {//throws BookingException {
+    public BookingDto save(BookingDto bookingDto) throws BookingException {
 
-        Booking booking = bookingMapper.toEntity(bookingDto);
-        booking.setStatusBooking(EStatusBooking.ACTIVE);
-
-
-        BookHistoryDto bookHistory = new BookHistoryDto();
-
-        bookHistory.setBooking(bookingMapper.toDto(booking));
-        bookHistory.setChangeDate(LocalDate.now());
-        bookHistory.setComment(booking.getComment());
-        bookHistory.setRoom(roomMapper.toDto(booking.getRoom()));
-        bookHistory.setCheckInDate(bookHistory.getCheckInDate());
-        bookHistory.setCheckOutDate(booking.getCheckOutDate());
-        bookHistory.setUser(userMapper.toDto(booking.getGuest()));
-        bookHistory.setGuest(userMapper.toDto(booking.getGuest()));
-        bookHistory.setStatusBooking(booking.getStatusBooking());
-
-        ResponseEntity<?> saveBookHistory = bookHistoryService.save(bookHistory);
-        Booking bookingSaved = bookingDao.save(booking);
-
-        return bookingDto;
-
-              //ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
-          //  if (sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK)){
+        try {
+            Booking booking = bookingMapper.toEntity(bookingDto);
+            booking.setStatusBooking(EStatusBooking.ACTIVE);
 
 
-         //   if (bookHistory.getStatusBooking().equals(HttpStatus.OK && saveBookHistory.getStatusCode().equals(HttpStatus.OK && sendAnEmailToTheUsersEmail.getStatusCode().equals(HttpStatus.OK))))
-               // return new ResponseEntity<>(bookingSaved, HttpStatus.OK);
-         //   }
-//        }catch (BookingException b){
-//            BookingException bookingException = new BookingException("Error while booking");
-//            return new ResponseEntity<>(bookingException.getMessage(), HttpStatus.NOT_ACCEPTABLE);
-//        }
-        //return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
+            BookHistoryDto bookHistory = new BookHistoryDto();
+
+            bookHistory.setBooking(bookingMapper.toDto(booking));
+            bookHistory.setChangeDate(LocalDate.now());
+            bookHistory.setComment(booking.getComment());
+            bookHistory.setRoom(roomMapper.toDto(booking.getRoom()));
+            bookHistory.setCheckInDate(bookHistory.getCheckInDate());
+            bookHistory.setCheckOutDate(booking.getCheckOutDate());
+            bookHistory.setUser(userMapper.toDto(booking.getGuest()));
+            bookHistory.setGuest(userMapper.toDto(booking.getGuest()));
+            bookHistory.setStatusBooking(booking.getStatusBooking());
+
+            //ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
+
+            ResponseEntity<?> saveBookHistory = bookHistoryService.save(bookHistory);
+            Booking bookingSaved = bookingDao.save(booking);
+            return bookingDto;
+        }catch (BookingException e){
+            BookingException bookingException = new BookingException("Error while saving booking");
+            bookingException.printStackTrace();
+            System.out.println(bookingException.getMessage());
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public ResponseEntity<?> saveBooking(ToSaveBooking saveBooking) {
+        try {
+
+            HotelDto hotelDto = hotelService.findById(saveBooking.getHotelId());
+            RoomDto roomDto = roomService.findById(saveBooking.getRoomId());
+            UserDto userDto = userService.findById(saveBooking.getGuestId());
+
+            BookingDto bookingDto = new BookingDto();
+            bookingDto.setHotel(hotelDto);
+            bookingDto.setRoom(roomDto);
+            bookingDto.setCheckInDate(saveBooking.getCheckInDate());
+            bookingDto.setCheckOutDate(saveBooking.getCheckOutDate());
+            bookingDto.setGuest(userDto);
+            bookingDto.setComment(saveBooking.getComment());
+            bookingDto.setPriceOfBook(saveBooking.getPriceOfBook());
+
+            BookingDto savedBooking = save(bookingDto);
+        } catch (BookingException b) {
+            BookingException bookingException = new BookingException("Error while saving saveBooking booking");
+            bookingException.printStackTrace();
+            System.out.println(bookingException.getMessage());
+            b.printStackTrace();
+            System.out.println(b.getMessage());
+        }
         return null;
     }
 

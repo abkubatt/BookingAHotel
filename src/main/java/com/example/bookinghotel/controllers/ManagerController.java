@@ -1,6 +1,7 @@
 package com.example.bookinghotel.controllers;
 
 import com.example.bookinghotel.models.dtos.*;
+import com.example.bookinghotel.models.request.ToSaveBooking;
 import com.example.bookinghotel.models.request.ToSaveRoom;
 import com.example.bookinghotel.services.*;
 import lombok.AccessLevel;
@@ -27,8 +28,8 @@ public class ManagerController {
 
     @PostMapping("saveBooking")
     //@PreAuthorize("hasRole('MANAGER') or hasRole('GUEST')")
-    public ResponseEntity<?> saveBooking(@RequestBody BookingDto bookingDto){
-        return bookingService.save(bookingDto);
+    public ResponseEntity<?> saveBooking(@RequestBody ToSaveBooking saveBooking){
+        return bookingService.saveBooking(saveBooking);
     }
     @PutMapping("cancelBooking")
    // @PreAuthorize("hasRole('MANAGER') or hasRole('GUEST')")

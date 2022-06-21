@@ -92,4 +92,10 @@ public class RoomServiceImpl implements RoomService {
             return new ResponseEntity<>(Message.of("Room not deleted"), HttpStatus.NOT_FOUND);
         }
     }
+
+    @Override
+    public RoomDto findById(Long roomId) {
+        Room room = roomDao.findById(roomId).orElse(null);
+        return roomMapper.toDto(room);
+    }
 }
