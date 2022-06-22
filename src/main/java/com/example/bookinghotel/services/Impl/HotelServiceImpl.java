@@ -13,7 +13,10 @@ import com.example.bookinghotel.services.BookingService;
 import com.example.bookinghotel.services.CityService;
 import com.example.bookinghotel.services.HotelService;
 import com.example.bookinghotel.services.ReviewService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ import java.util.List;
 
 @Service
 public class HotelServiceImpl implements HotelService {
+    Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
     @Autowired
     private HotelDao hotelDao;
     @Autowired
@@ -38,6 +42,9 @@ public class HotelServiceImpl implements HotelService {
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         hotel.setHotelStatus(EHotelStatus.NOT_AVAILABLE);
         Hotel saveHotel = hotelDao.save(hotel);
+        if (saveHotel == null) logger.error("Failed while saving hotel: -> " + hotelDto);
+
+        logger.info("Hotel successfully saved: -> " + saveHotel);
         return new ResponseEntity<>(saveHotel, HttpStatus.OK);
     }
 
@@ -45,10 +52,14 @@ public class HotelServiceImpl implements HotelService {
     public ResponseEntity<?> update(HotelDto hotelDto) {
         boolean isExists = hotelDao.existsById(hotelDto.getId());
         if (!isExists){
+            logger.error("Hotel not found from database -> " + hotelDto);
             return new ResponseEntity<>(Message.of("Hotel not found"), HttpStatus.NOT_FOUND);
         }else {
             Hotel hotel = hotelMapper.toEntity(hotelDto);
             Hotel updatedHotel = hotelDao.save(hotel);
+            if (updatedHotel == null) logger.error("Failed while updating hotel: -> " + hotel);
+
+            logger.info("Hotel successfully updated: -> " + updatedHotel);
             return new ResponseEntity<>(updatedHotel, HttpStatus.OK);
         }
     }
@@ -63,14 +74,17 @@ public class HotelServiceImpl implements HotelService {
     public ResponseEntity<?> delete(Long hotelId) {
         HotelDto hotelDto = findById(hotelId);
         if (hotelDto == null){
+            logger.error("Hotel not found from database: -> " + hotelId);
             return new ResponseEntity<>(Message.of("Hotel not found"),HttpStatus.NOT_FOUND);
         }
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         hotel.setHotelStatus(EHotelStatus.INACTIVE);
-        ResponseEntity<?> blockHotel = update(hotelMapper.toDto(hotel));
-        if (blockHotel.getStatusCode().equals(HttpStatus.OK)){
-            return new ResponseEntity<>(blockHotel, HttpStatus.OK);
+        ResponseEntity<?> deletedHotel = update(hotelMapper.toDto(hotel));
+        if (deletedHotel.getStatusCode().equals(HttpStatus.OK)){
+            logger.info("Hotel successfully deleted: -> " + deletedHotel);
+            return new ResponseEntity<>(deletedHotel, HttpStatus.OK);
         }else{
+            logger.error("Failed while deleting hotel: -> " + hotelId);
             return new ResponseEntity<>(Message.of("Hotel not deleted"), HttpStatus.NOT_FOUND);
         }
     }
@@ -79,14 +93,17 @@ public class HotelServiceImpl implements HotelService {
     public ResponseEntity<?> blockHotel(Long hotelId) {
         HotelDto hotelDto = findById(hotelId);
         if (hotelDto == null){
+            logger.error("Hotel not found from database: -> " + hotelId);
             return new ResponseEntity<>(Message.of("Hotel not found"),HttpStatus.NOT_FOUND);
         }
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         hotel.setHotelStatus(EHotelStatus.BLOCK);
         ResponseEntity<?> blockHotel = update(hotelMapper.toDto(hotel));
         if (blockHotel.getStatusCode().equals(HttpStatus.OK)){
+            logger.info("Hotel successfully blocked: -> " + blockHotel);
             return new ResponseEntity<>(blockHotel, HttpStatus.OK);
         }else{
+            logger.error("Failed while blocking hotel: -> " + hotel);
             return new ResponseEntity<>(Message.of("Hotel not blocked"), HttpStatus.NOT_FOUND);
         }
     }
@@ -94,14 +111,17 @@ public class HotelServiceImpl implements HotelService {
     public ResponseEntity<?> confirm(Long hotelId) {
         HotelDto hotelDto = findById(hotelId);
         if (hotelDto == null){
+            logger.error("Hotel not found from database: -> " + hotelId);
             return new ResponseEntity<>(Message.of("Hotel not found"),HttpStatus.NOT_FOUND);
         }
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         hotel.setHotelStatus(EHotelStatus.ACTIVE);
         ResponseEntity<?> blockHotel = update(hotelMapper.toDto(hotel));
         if (blockHotel.getStatusCode().equals(HttpStatus.OK)){
+            logger.info("Hotel successfully confirmed: -> " + blockHotel);
             return new ResponseEntity<>(blockHotel, HttpStatus.OK);
         }else{
+            logger.error("Hotel not confirmed: -> " + hotel);
             return new ResponseEntity<>(Message.of("Hotel not confirmed"), HttpStatus.NOT_FOUND);
         }
     }

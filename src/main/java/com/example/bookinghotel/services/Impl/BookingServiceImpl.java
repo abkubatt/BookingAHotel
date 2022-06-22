@@ -16,7 +16,10 @@ import com.example.bookinghotel.models.request.ToSaveBooking;
 import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ import java.time.LocalDate;
 
 @Service
 public class BookingServiceImpl implements BookingService {
+    Logger logger = LoggerFactory.getLogger(BookingServiceImpl.class);
     @Autowired
     private BookingDao bookingDao;
     @Autowired
@@ -72,8 +76,12 @@ public class BookingServiceImpl implements BookingService {
 
             ResponseEntity<?> saveBookHistory = bookHistoryService.save(bookHistory);
             Booking bookingSaved = bookingDao.save(booking);
+
+            logger.info("Booking saved: -> " + bookingSaved);
             return bookingDto;
         }catch (BookingException e){
+            logger.error("Booking not saved: -> " + bookingDto);
+
             BookingException bookingException = new BookingException("Error while saving booking");
             bookingException.printStackTrace();
             System.out.println(bookingException.getMessage());
@@ -84,6 +92,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> saveBooking(ToSaveBooking saveBooking) {
         try {
 
@@ -101,14 +110,20 @@ public class BookingServiceImpl implements BookingService {
             bookingDto.setPriceOfBook(saveBooking.getPriceOfBook());
 
             BookingDto savedBooking = save(bookingDto);
+
+            logger.info("saveBooking successfully saved: -> " + savedBooking);
+            return new ResponseEntity<>(savedBooking, HttpStatus.OK);
         } catch (BookingException b) {
             BookingException bookingException = new BookingException("Error while saving saveBooking booking");
             bookingException.printStackTrace();
             System.out.println(bookingException.getMessage());
             b.printStackTrace();
             System.out.println(b.getMessage());
+
+            logger.error("saveBooking method filed, not saved: -> " + saveBooking);
+
+            return new ResponseEntity<>(b.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
-        return null;
     }
 
     @Override
@@ -171,14 +186,17 @@ public class BookingServiceImpl implements BookingService {
             ResponseEntity<?> savedBookingHistory = bookHistoryService.save(bookHistory);
             ResponseEntity<?> canceledBooking = update(bookingMapper.toDto(entityBooking));
            // ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode2(entityBooking.getGuest().getEmail());
-            if (canceledBooking.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK)) {
-                return new ResponseEntity<>(canceledBooking, HttpStatus.OK);
-            }
+           // if (canceledBooking.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK)) {
+            logger.info("Booking successfully canceled: -> " + savedBookingHistory);
+            return new ResponseEntity<>(canceledBooking, HttpStatus.OK);
+            //}
         } catch (CancelBookingErrorException c) {
+
+            logger.error("cancel Booking filed: -> " + bookingId  + " userId " + userId);
             CancelBookingErrorException cancelBooking = new CancelBookingErrorException("Error while cancelling booking");
             return new ResponseEntity<>(cancelBooking.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
+        //return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
     }
 
 
@@ -187,8 +205,10 @@ public class BookingServiceImpl implements BookingService {
     public ResponseEntity<?> sendCode(String email) {
         try {
             emailSender.sendSimpleMessage(email, "You have successfully booked a hotel", ".");
+            logger.info("Message successfully sent to: -> " + email);
             return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
         } catch (Exception ex) {
+            logger.error("Message filed while sending message to: ->" + email);
             return new ResponseEntity<>(Message.of("Error while sending code to email"), HttpStatus.NOT_IMPLEMENTED);
         }
     }
@@ -196,8 +216,12 @@ public class BookingServiceImpl implements BookingService {
     public ResponseEntity<?> sendCode2(String email) {
         try {
             emailSender.sendSimpleMessage(email, "You have successfully canceled your hotel reservation", ".");
+            logger.info("Message successfully sent to: -> " + email);
+
             return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
         } catch (Exception ex) {
+            logger.error("Message filed while sending message to: ->" + email);
+
             return new ResponseEntity<>(Message.of("Error while sending code to email"), HttpStatus.NOT_IMPLEMENTED);
         }
     }

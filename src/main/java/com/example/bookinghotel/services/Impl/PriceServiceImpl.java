@@ -6,6 +6,8 @@ import com.example.bookinghotel.models.dtos.PriceDto;
 import com.example.bookinghotel.models.entities.Price;
 import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.PriceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PriceServiceImpl implements PriceService {
+    Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
     @Autowired
     private PriceDao priceDao;
     private final PriceMapper priceMapper = PriceMapper.INSTANCE;
@@ -29,6 +32,8 @@ public class PriceServiceImpl implements PriceService {
         Price price = priceMapper.toEntity(priceDto);
         price.setActive(true);
         Price savedPrice = priceDao.save(price);
+        if (savedPrice == null) logger.error("Failed while saving price: -> " + priceDto);
+        logger.info("Price successfully saved: -> "+ savedPrice);
         return priceMapper.toDto(savedPrice);
     }
 
@@ -36,10 +41,13 @@ public class PriceServiceImpl implements PriceService {
     public ResponseEntity<?> update(PriceDto priceDto) {
         boolean isExists = priceDao.existsById(priceDto.getId());
         if (!isExists){
+            logger.error("Price not found from database: -> " + priceDto);
             return new ResponseEntity<>(Message.of("Price not found"), HttpStatus.NOT_FOUND);
         }else {
             Price price = priceMapper.toEntity(priceDto);
             Price updatedPrice = priceDao.save(price);
+            if (updatedPrice == null) logger.error("Failed while updating price: -> " + price);
+            logger.info("Price successfully updated: -> " + updatedPrice);
             return new ResponseEntity<>(updatedPrice, HttpStatus.OK);
         }
 
@@ -51,8 +59,10 @@ public class PriceServiceImpl implements PriceService {
         price.setActive(false);
         ResponseEntity<?> deletedPrice = update(priceMapper.toDto(price));
         if (deletedPrice.getStatusCode().equals(HttpStatus.OK)){
+            logger.info("Price successfully deleted: -> " + deletedPrice);
             return new ResponseEntity<>(deletedPrice, HttpStatus.OK);
         }else{
+            logger.error("Failed while deleting price: -> " + priceDto);
             return new ResponseEntity<>(Message.of("Price not deleted"), HttpStatus.NOT_FOUND);
         }
     }
