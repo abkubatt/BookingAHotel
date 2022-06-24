@@ -60,6 +60,7 @@ public class BookingServiceImpl implements BookingService {
             Booking booking = bookingMapper.toEntity(bookingDto);
             booking.setStatusBooking(EStatusBooking.ACTIVE);
 
+            Booking bookingSaved = bookingDao.save(booking);
 
             BookHistoryDto bookHistory = new BookHistoryDto();
 
@@ -76,7 +77,6 @@ public class BookingServiceImpl implements BookingService {
             //ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
 
             ResponseEntity<?> saveBookHistory = bookHistoryService.save(bookHistory);
-            Booking bookingSaved = bookingDao.save(booking);
 
             logger.info("Booking saved: -> " + bookingSaved);
             return bookingDto;
@@ -169,6 +169,7 @@ public class BookingServiceImpl implements BookingService {
             BookingDto bookingDto2 = findByIdSecond(toCancelBooking.getBookingId());
             Booking entityBooking = bookingMapper.toEntity(bookingDto2);
             entityBooking.setStatusBooking(EStatusBooking.INACTIVE);
+            ResponseEntity<?> canceledBooking = update(bookingMapper.toDto(entityBooking));
             UserDto userDto = userService.findById(toCancelBooking.getUserId());
 
 
@@ -185,7 +186,6 @@ public class BookingServiceImpl implements BookingService {
 
 
             ResponseEntity<?> savedBookingHistory = bookHistoryService.save(bookHistory);
-            ResponseEntity<?> canceledBooking = update(bookingMapper.toDto(entityBooking));
            // ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode2(entityBooking.getGuest().getEmail());
            // if (canceledBooking.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Booking successfully canceled: -> " + savedBookingHistory);

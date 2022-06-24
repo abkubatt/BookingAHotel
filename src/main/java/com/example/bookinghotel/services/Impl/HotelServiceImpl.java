@@ -67,6 +67,8 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public HotelDto findById(Long hotelId) {
         Hotel hotel = hotelDao.findById(hotelId).orElse(null);
+        if(hotel == null) logger.error("Hotel not found from database: -> " + hotelId);
+        logger.info("Hotel successfully found: -> " + hotel);
         return hotelMapper.toDto(hotel);
     }
 

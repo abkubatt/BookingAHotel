@@ -16,7 +16,7 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne//(cascade = CascadeType.MERGE)
     @JoinColumn(name = "hotel_id")
     Hotel hotel;
     @ManyToOne(cascade = CascadeType.MERGE)
