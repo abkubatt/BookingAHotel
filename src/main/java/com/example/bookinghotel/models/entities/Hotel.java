@@ -21,9 +21,9 @@ public class Hotel {
     String description;
     String address;
     byte star;
-    @OneToMany
-    @JoinColumn(name = "photo_id")
-    List<Photo> photos;
+//    @OneToMany(cascade = CascadeType.MERGE)
+//    @JoinColumn(name = "photo_id")
+   // List<Photo> photos;
     String phone;
     double currentScore;
     String email;

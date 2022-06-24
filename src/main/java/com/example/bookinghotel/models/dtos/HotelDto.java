@@ -16,7 +16,7 @@ public class HotelDto {
     String description;
     String address;
     byte star;
-    List<PhotoDto> photos;
+   // List<PhotoDto> photos;
     String phone;
     double currentScore;
     String email;

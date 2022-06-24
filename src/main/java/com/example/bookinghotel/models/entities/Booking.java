@@ -16,15 +16,15 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "hotel_id")
     Hotel hotel;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "room_id")
     Room room;
     LocalDate checkInDate;
     LocalDate checkOutDate;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "guest_id")
     User guest;
     String comment;

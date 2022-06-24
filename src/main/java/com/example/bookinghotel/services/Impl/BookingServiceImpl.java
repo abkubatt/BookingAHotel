@@ -53,7 +53,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto save(BookingDto bookingDto) throws BookingException {
+    public BookingDto save( BookingDto bookingDto) throws BookingException {
 
         try {
             Booking booking = bookingMapper.toEntity(bookingDto);
@@ -66,7 +66,7 @@ public class BookingServiceImpl implements BookingService {
             bookHistory.setChangeDate(LocalDate.now());
             bookHistory.setComment(booking.getComment());
             bookHistory.setRoom(roomMapper.toDto(booking.getRoom()));
-            bookHistory.setCheckInDate(bookHistory.getCheckInDate());
+            bookHistory.setCheckInDate(booking.getCheckInDate());
             bookHistory.setCheckOutDate(booking.getCheckOutDate());
             bookHistory.setUser(userMapper.toDto(booking.getGuest()));
             bookHistory.setGuest(userMapper.toDto(booking.getGuest()));

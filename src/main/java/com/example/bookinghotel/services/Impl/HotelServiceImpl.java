@@ -29,8 +29,8 @@ public class HotelServiceImpl implements HotelService {
     Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
     @Autowired
     private HotelDao hotelDao;
-    @Autowired
-    private BookingService bookingService;
+//    @Autowired
+//    private BookingService bookingService;
     @Autowired
     private CityService cityService;
     private final HotelMapper hotelMapper = HotelMapper.INSTANCE;
