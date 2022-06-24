@@ -1,5 +1,6 @@
 package com.example.bookinghotel.models.entities;
 import com.example.bookinghotel.models.enums.EBedType;
+import com.example.bookinghotel.models.enums.ETypeOfRoom;
 import com.example.bookinghotel.models.enums.ETypeOfView;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -27,5 +28,7 @@ public class Room {
     Hotel hotel;
     @Enumerated(EnumType.STRING)
     ETypeOfView typeOfView;
+    @Enumerated(EnumType.STRING)
+    ETypeOfRoom typeOfRoom;
     boolean active;
 }

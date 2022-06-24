@@ -2,6 +2,7 @@ package com.example.bookinghotel.services;
 
 import com.example.bookinghotel.models.dtos.CityDto;
 import com.example.bookinghotel.models.dtos.HotelDto;
+import com.example.bookinghotel.models.request.ToFiler;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
@@ -27,5 +28,5 @@ public interface HotelService {
 
     List<HotelDto> findAll();
 
-    ResponseEntity<?> filter(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, int guestsAmount);
+    ResponseEntity<?> filter(ToFiler filer);
 }

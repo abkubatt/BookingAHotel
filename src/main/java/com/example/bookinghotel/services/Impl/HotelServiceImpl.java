@@ -8,6 +8,7 @@ import com.example.bookinghotel.models.dtos.ReviewDto;
 import com.example.bookinghotel.models.entities.City;
 import com.example.bookinghotel.models.entities.Hotel;
 import com.example.bookinghotel.models.enums.EHotelStatus;
+import com.example.bookinghotel.models.request.ToFiler;
 import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.BookingService;
 import com.example.bookinghotel.services.CityService;
@@ -167,8 +168,11 @@ public class HotelServiceImpl implements HotelService {
         return hotelMapper.toDtoList(hotelDao.findAll());
     }
 
+
+
     @Override
-    public ResponseEntity<?> filter(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, int guestsAmount) {
-           return null;
+    public ResponseEntity<?> filter(ToFiler filer) {
+        CityDto cityDto = cityService.findById(filer.getCityId());
+        return null;
     }
 }

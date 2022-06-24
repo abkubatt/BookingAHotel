@@ -64,6 +64,7 @@ public class RoomServiceImpl implements RoomService {
             room.setWifi(saveRoom.isWifi());
             room.setHotel(hotelDto);
             room.setTypeOfView(saveRoom.getTypeOfView());
+            room.setTypeOfRoom(saveRoom.getTypeOfRoom());
             RoomDto savedRoom = save(room);
 
 
