@@ -11,5 +11,6 @@ public class PhotoDto {
     Long id;
     String link;
     int position;
+    HotelDto hotel;
 //    HotelDto hotel;
 }

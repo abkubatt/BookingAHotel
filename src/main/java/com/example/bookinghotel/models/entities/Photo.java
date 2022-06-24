@@ -16,6 +16,9 @@ public class Photo {
     Long id;
     String link;
     int position;
+    @ManyToOne
+    @JoinColumn(name = "hotel_id")
+    Hotel hotel;
 //    @ManyToOne
 //    @JoinColumn(name = "hotel_id")
 //    Hotel hotel;

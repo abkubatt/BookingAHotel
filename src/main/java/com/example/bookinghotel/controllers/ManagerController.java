@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(value = "/api/manager")
@@ -24,6 +25,8 @@ public class ManagerController {
     RoomService roomService;
     @Autowired
     PriceService priceService;
+    @Autowired
+    FileService fileService;
     @Autowired
     PhotoService photoService;
 
@@ -78,4 +81,8 @@ public class ManagerController {
         return roomService.saveRoom(saveRoom);
     }
 
+    @PostMapping("/uploadPhotoToHotel")
+    public ResponseEntity<?> uploadPhotoToHotel(@RequestParam MultipartFile file, @RequestParam Long hotelId, @RequestParam int position){
+        return fileService.uploadImageToHotel(file,hotelId,position);
+    }
 }
