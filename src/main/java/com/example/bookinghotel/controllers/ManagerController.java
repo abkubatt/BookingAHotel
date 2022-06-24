@@ -1,6 +1,7 @@
 package com.example.bookinghotel.controllers;
 
 import com.example.bookinghotel.models.dtos.*;
+import com.example.bookinghotel.models.request.ToCancelBooking;
 import com.example.bookinghotel.models.request.ToSaveBooking;
 import com.example.bookinghotel.models.request.ToSaveRoom;
 import com.example.bookinghotel.services.*;
@@ -33,8 +34,8 @@ public class ManagerController {
     }
     @PutMapping("cancelBooking")
    // @PreAuthorize("hasRole('MANAGER') or hasRole('GUEST')")
-    public ResponseEntity<?> cancelBooking(@RequestParam Long bookingId,@RequestParam String comment,@RequestParam Long userId){
-        return bookingService.cancelBooking(bookingId,comment,userId);
+    public ResponseEntity<?> cancelBooking(@RequestBody ToCancelBooking cancelBooking){
+        return bookingService.cancelBooking(cancelBooking);
     }
     @PostMapping("/saveReplyToReview")
     public ResponseEntity<?> saveReplyToReview(@RequestBody ReplyToReviewDto replyToReviewDto){

@@ -1,6 +1,7 @@
 package com.example.bookinghotel.services;
 
 import com.example.bookinghotel.models.dtos.BookingDto;
+import com.example.bookinghotel.models.request.ToCancelBooking;
 import com.example.bookinghotel.models.request.ToSaveBooking;
 import org.springframework.http.ResponseEntity;
 
@@ -17,7 +18,7 @@ public interface BookingService {
 
     BookingDto findByIdSecond(Long id);
 
-    ResponseEntity<?> cancelBooking(Long bookingId, String comment, Long userId);
+    ResponseEntity<?> cancelBooking(ToCancelBooking cancelBooking);
 
     ResponseEntity<?> sendCode(String email);
     ResponseEntity<?> sendCode2(String email);

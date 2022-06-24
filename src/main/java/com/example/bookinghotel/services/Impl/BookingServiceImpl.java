@@ -12,6 +12,7 @@ import com.example.bookinghotel.models.dtos.*;
 import com.example.bookinghotel.models.entities.Booking;
 
 import com.example.bookinghotel.models.enums.EStatusBooking;
+import com.example.bookinghotel.models.request.ToCancelBooking;
 import com.example.bookinghotel.models.request.ToSaveBooking;
 import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.*;
@@ -163,18 +164,18 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> cancelBooking(Long bookingId, String comment, Long userId) {
+    public ResponseEntity<?> cancelBooking(ToCancelBooking toCancelBooking) {
         try {
-            BookingDto bookingDto2 = findByIdSecond(bookingId);
+            BookingDto bookingDto2 = findByIdSecond(toCancelBooking.getBookingId());
             Booking entityBooking = bookingMapper.toEntity(bookingDto2);
             entityBooking.setStatusBooking(EStatusBooking.INACTIVE);
-            UserDto userDto = userService.findById(userId);
+            UserDto userDto = userService.findById(toCancelBooking.getUserId());
 
 
             BookHistoryDto bookHistory = new BookHistoryDto();
             bookHistory.setBooking(bookingDto2);
             bookHistory.setChangeDate(LocalDate.now());
-            bookHistory.setComment(comment);
+            bookHistory.setComment(toCancelBooking.getComment());
             bookHistory.setRoom(roomMapper.toDto(entityBooking.getRoom()));
             bookHistory.setCheckInDate(entityBooking.getCheckInDate());
             bookHistory.setCheckOutDate(entityBooking.getCheckOutDate());
@@ -192,7 +193,7 @@ public class BookingServiceImpl implements BookingService {
             //}
         } catch (CancelBookingErrorException c) {
 
-            logger.error("cancel Booking filed: -> " + bookingId  + " userId " + userId);
+            logger.error("cancel Booking filed: -> " + toCancelBooking.getBookingId()  + " userId " + toCancelBooking.getUserId());
             CancelBookingErrorException cancelBooking = new CancelBookingErrorException("Error while cancelling booking");
             return new ResponseEntity<>(cancelBooking.getMessage(), HttpStatus.NOT_FOUND);
         }

@@ -17,7 +17,7 @@ public class BookHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "booking_id")
     Booking booking;
     LocalDate changeDate;
