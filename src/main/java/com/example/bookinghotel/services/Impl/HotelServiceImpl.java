@@ -1,6 +1,7 @@
 package com.example.bookinghotel.services.Impl;
 
 import com.example.bookinghotel.dao.HotelDao;
+import com.example.bookinghotel.mappers.CityMapper;
 import com.example.bookinghotel.mappers.HotelMapper;
 import com.example.bookinghotel.models.dtos.CityDto;
 import com.example.bookinghotel.models.dtos.HotelDto;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,6 +36,7 @@ public class HotelServiceImpl implements HotelService {
 //    private BookingService bookingService;
     @Autowired
     private CityService cityService;
+    private final CityMapper cityMapper  = CityMapper.INSTANCE;
     private final HotelMapper hotelMapper = HotelMapper.INSTANCE;
     @Autowired
     private ReviewService reviewService;
@@ -171,8 +174,23 @@ public class HotelServiceImpl implements HotelService {
 
 
     @Override
+    @Transactional
     public ResponseEntity<?> filter(ToFiler filer) {
         CityDto cityDto = cityService.findById(filer.getCityId());
-        return null;
+        List<Hotel> hotels = hotelDao.findAll(filer.getCityId(),filer.getNumberOfPerson(), filer.getBedType());
+        return new ResponseEntity<>(hotels, HttpStatus.OK);
     }
+
+    /*- список всех отелей по городу и по рейтингу
+
+        - фильтр по – городу
+        -- дате заезда и дате выезда
+        -- кол-во человек
+        -- кол-во номеров
+        - фильтр по типу кровати
+
+
+        - получить полную информацию по отелю с доступными вариантами
+        номеров
+*/
 }

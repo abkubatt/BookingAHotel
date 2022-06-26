@@ -2,6 +2,7 @@ package com.example.bookinghotel.controllers;
 
 import com.example.bookinghotel.models.dtos.BookingDto;
 import com.example.bookinghotel.models.dtos.ReviewDto;
+import com.example.bookinghotel.models.request.ToFiler;
 import com.example.bookinghotel.services.BookingService;
 import com.example.bookinghotel.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,6 @@ public class GuestController {
     public ResponseEntity<?> deleteReview(@RequestBody ReviewDto reviewDto){
         return reviewService.delete(reviewDto);
     }
+
 
 }

@@ -17,9 +17,9 @@ public class ToFiler {
     @NotBlank(message = "CheckOutDate id must not be empty")
     String checkOutDate;
     @NotBlank(message = "Number of Person id must not be empty")
-    byte numberOfPerson;
+    Integer numberOfPerson;
     @NotBlank(message = "Number Of Room id must not be empty")
-    byte numberOfRoom;
+    int numberOfRoom;
     @NotBlank(message = "Bed type must not be empty")
     EBedType bedType;
 }
