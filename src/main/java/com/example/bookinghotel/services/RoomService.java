@@ -1,5 +1,6 @@
 package com.example.bookinghotel.services;
 
+import com.example.bookinghotel.models.dtos.HotelDto;
 import com.example.bookinghotel.models.dtos.RoomDto;
 import com.example.bookinghotel.models.request.ToSaveRoom;
 import org.springframework.http.ResponseEntity;
@@ -13,5 +14,6 @@ public interface RoomService {
     ResponseEntity<?> delete(RoomDto roomDto);
 
     RoomDto findById(Long roomId);
+    RoomDto findByHotel(HotelDto hotelDto);
 
 }

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -225,5 +226,17 @@ public class BookingServiceImpl implements BookingService {
 
             return new ResponseEntity<>(Message.of("Error while sending code to email"), HttpStatus.NOT_IMPLEMENTED);
         }
+    }
+
+    @Override
+    public BookingDto findByHotel(HotelDto hotelDto) {
+        Booking booking = bookingDao.findByHotel(hotelMapper.toEntity(hotelDto));
+        return bookingMapper.toDto(booking);
+    }
+
+    @Override
+    public List<BookingDto> findAllBooking(LocalDate checkInDate, LocalDate checkOutDate) {
+        List<Booking> booking = bookingDao.findAllBooking(checkInDate, checkOutDate);
+        return bookingMapper.toDtoList(booking);
     }
 }

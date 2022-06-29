@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -17,14 +18,14 @@ public class ToFiler {
     Long cityId;
     @NotBlank(message = "CheckInDate id must not be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    Date checkInDate;
+    LocalDate checkInDate;
     @NotBlank(message = "CheckOutDate id must not be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    Date checkOutDate;
+    LocalDate checkOutDate;
     @NotBlank(message = "Number of Person id must not be empty")
     int numberOfPerson;
-    @NotBlank(message = "Number Of Room id must not be empty")
-    int numberOfRoom;
+//    @NotBlank(message = "Number Of Room id must not be empty")
+//    int numberOfRoom;
     @NotBlank(message = "Bed type must not be empty")
     EBedType bedType;
 }

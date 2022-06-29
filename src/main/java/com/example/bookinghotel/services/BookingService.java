@@ -1,9 +1,13 @@
 package com.example.bookinghotel.services;
 
 import com.example.bookinghotel.models.dtos.BookingDto;
+import com.example.bookinghotel.models.dtos.HotelDto;
 import com.example.bookinghotel.models.request.ToCancelBooking;
 import com.example.bookinghotel.models.request.ToSaveBooking;
 import org.springframework.http.ResponseEntity;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public interface BookingService {
 
@@ -22,6 +26,8 @@ public interface BookingService {
 
     ResponseEntity<?> sendCode(String email);
     ResponseEntity<?> sendCode2(String email);
+    BookingDto findByHotel(HotelDto hotelDto);
+    List<BookingDto> findAllBooking(LocalDate checkInDate, LocalDate checkOutDate);
 
 
 }

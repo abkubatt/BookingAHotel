@@ -4,20 +4,15 @@ import com.example.bookinghotel.dao.BookingDao;
 import com.example.bookinghotel.dao.HotelDao;
 import com.example.bookinghotel.mappers.CityMapper;
 import com.example.bookinghotel.mappers.HotelMapper;
-import com.example.bookinghotel.models.dtos.BookingDto;
-import com.example.bookinghotel.models.dtos.CityDto;
-import com.example.bookinghotel.models.dtos.HotelDto;
-import com.example.bookinghotel.models.dtos.ReviewDto;
+import com.example.bookinghotel.models.dtos.*;
 import com.example.bookinghotel.models.entities.Booking;
 import com.example.bookinghotel.models.entities.City;
 import com.example.bookinghotel.models.entities.Hotel;
+import com.example.bookinghotel.models.entities.Room;
 import com.example.bookinghotel.models.enums.EHotelStatus;
 import com.example.bookinghotel.models.request.ToFiler;
 import com.example.bookinghotel.models.response.Message;
-import com.example.bookinghotel.services.BookingService;
-import com.example.bookinghotel.services.CityService;
-import com.example.bookinghotel.services.HotelService;
-import com.example.bookinghotel.services.ReviewService;
+import com.example.bookinghotel.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,11 +31,15 @@ public class HotelServiceImpl implements HotelService {
     Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
     @Autowired
     private HotelDao hotelDao;
-//    @Autowired
-//    private BookingService bookingService;
+    @Autowired
+    private BookingService bookingService;
+    @Autowired
+    private RoomService roomService;
+    @Autowired
+    private HotelService hotelService;
     @Autowired
     private CityService cityService;
-    private final CityMapper cityMapper  = CityMapper.INSTANCE;
+    private final CityMapper cityMapper = CityMapper.INSTANCE;
     private final HotelMapper hotelMapper = HotelMapper.INSTANCE;
     @Autowired
     private BookingDao bookingDao;
@@ -60,10 +60,10 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public ResponseEntity<?> update(HotelDto hotelDto) {
         boolean isExists = hotelDao.existsById(hotelDto.getId());
-        if (!isExists){
+        if (!isExists) {
             logger.error("Hotel not found from database -> " + hotelDto);
             return new ResponseEntity<>(Message.of("Hotel not found"), HttpStatus.NOT_FOUND);
-        }else {
+        } else {
             Hotel hotel = hotelMapper.toEntity(hotelDto);
             Hotel updatedHotel = hotelDao.save(hotel);
             if (updatedHotel == null) logger.error("Failed while updating hotel: -> " + hotel);
@@ -76,7 +76,7 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public HotelDto findById(Long hotelId) {
         Hotel hotel = hotelDao.findById(hotelId).orElse(null);
-        if(hotel == null) logger.error("Hotel not found from database: -> " + hotelId);
+        if (hotel == null) logger.error("Hotel not found from database: -> " + hotelId);
         logger.info("Hotel successfully found: -> " + hotel);
         return hotelMapper.toDto(hotel);
     }
@@ -84,17 +84,17 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public ResponseEntity<?> delete(Long hotelId) {
         HotelDto hotelDto = findById(hotelId);
-        if (hotelDto == null){
+        if (hotelDto == null) {
             logger.error("Hotel not found from database: -> " + hotelId);
-            return new ResponseEntity<>(Message.of("Hotel not found"),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Message.of("Hotel not found"), HttpStatus.NOT_FOUND);
         }
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         hotel.setHotelStatus(EHotelStatus.INACTIVE);
         ResponseEntity<?> deletedHotel = update(hotelMapper.toDto(hotel));
-        if (deletedHotel.getStatusCode().equals(HttpStatus.OK)){
+        if (deletedHotel.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Hotel successfully deleted: -> " + deletedHotel);
             return new ResponseEntity<>(deletedHotel, HttpStatus.OK);
-        }else{
+        } else {
             logger.error("Failed while deleting hotel: -> " + hotelId);
             return new ResponseEntity<>(Message.of("Hotel not deleted"), HttpStatus.NOT_FOUND);
         }
@@ -103,35 +103,36 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public ResponseEntity<?> blockHotel(Long hotelId) {
         HotelDto hotelDto = findById(hotelId);
-        if (hotelDto == null){
+        if (hotelDto == null) {
             logger.error("Hotel not found from database: -> " + hotelId);
-            return new ResponseEntity<>(Message.of("Hotel not found"),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Message.of("Hotel not found"), HttpStatus.NOT_FOUND);
         }
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         hotel.setHotelStatus(EHotelStatus.BLOCK);
         ResponseEntity<?> blockHotel = update(hotelMapper.toDto(hotel));
-        if (blockHotel.getStatusCode().equals(HttpStatus.OK)){
+        if (blockHotel.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Hotel successfully blocked: -> " + blockHotel);
             return new ResponseEntity<>(blockHotel, HttpStatus.OK);
-        }else{
+        } else {
             logger.error("Failed while blocking hotel: -> " + hotel);
             return new ResponseEntity<>(Message.of("Hotel not blocked"), HttpStatus.NOT_FOUND);
         }
     }
+
     @Override
     public ResponseEntity<?> confirm(Long hotelId) {
         HotelDto hotelDto = findById(hotelId);
-        if (hotelDto == null){
+        if (hotelDto == null) {
             logger.error("Hotel not found from database: -> " + hotelId);
-            return new ResponseEntity<>(Message.of("Hotel not found"),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Message.of("Hotel not found"), HttpStatus.NOT_FOUND);
         }
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         hotel.setHotelStatus(EHotelStatus.ACTIVE);
         ResponseEntity<?> blockHotel = update(hotelMapper.toDto(hotel));
-        if (blockHotel.getStatusCode().equals(HttpStatus.OK)){
+        if (blockHotel.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Hotel successfully confirmed: -> " + blockHotel);
             return new ResponseEntity<>(blockHotel, HttpStatus.OK);
-        }else{
+        } else {
             logger.error("Hotel not confirmed: -> " + hotel);
             return new ResponseEntity<>(Message.of("Hotel not confirmed"), HttpStatus.NOT_FOUND);
         }
@@ -146,14 +147,14 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public List<HotelDto> findAllHotelsByCity(Long cityId) {
         CityDto cityDto = cityService.findById(cityId);
-        if (cityDto != null){
+        if (cityDto != null) {
             List<Hotel> hotels = hotelDao.findAllByCity(cityDto.getId());
-            if (!hotels.isEmpty()){
+            if (!hotels.isEmpty()) {
                 return hotelMapper.toDtoList(hotels);
-            }else{
+            } else {
                 return null;
             }
-        }else{
+        } else {
             return null;
         }
 
@@ -162,10 +163,10 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public void countCurrentScore() {
         List<HotelDto> hotelDtos = findAll();
-        hotelDtos.stream().forEach(x->{
+        hotelDtos.stream().forEach(x -> {
             List<ReviewDto> reviews = reviewService.findAllByHotelAndActive(x);
             double sum = reviews.stream().mapToDouble(ReviewDto::getScore).sum();
-            double currentScore = Math.round((sum/reviews.size())/10.0)*10;
+            double currentScore = Math.round((sum / reviews.size()) / 10.0) * 10;
             x.setCurrentScore(currentScore);
             update(x);
         });
@@ -176,16 +177,42 @@ public class HotelServiceImpl implements HotelService {
         return hotelMapper.toDtoList(hotelDao.findAll());
     }
 
-
-
+    //    HotelDto hotel = hotelService.findById(hotels.get(0).getId());
+//    Hotel checkingHotel = new Hotel();
+//    checkingHotel = hotelMapper.toEntity(hotel);
+//
+//    BookingDto bookingDto = bookingService.findByHotel(hotelMapper.toDto(checkingHotel));
+//    RoomDto roomDto = roomService.findByHotel(hotelMapper.toDto(checkingHotel));
+//        if (checkingHotel.getCity().equals(filer.getCityId()) && bookingDto.getCheckInDate().equals(filer.getCheckInDate()) && bookingDto.getCheckOutDate().equals(filer.getCheckOutDate()) && roomDto.getCapacity() == filer.getNumberOfPerson() && roomDto.getBedType().equals(filer.getBedType())){
+//            logger.info("Hotel(room) is busy: -> " + filer);
+//            return new ResponseEntity<>(Message.of("This hotel's room is booked by someone"), HttpStatus.NOT_FOUND);
     @Override
     @Transactional
     public ResponseEntity<?> filter(ToFiler filer) {
 
         CityDto cityDto = cityService.findById(filer.getCityId());
-        List<Hotel> hotels = hotelDao.findAll(filer.getCityId(), filer.getNumberOfPerson(), filer.getCheckInDate(), filer.getCheckOutDate(),filer.getBedType());
-        List<Booking> bookingDto = bookingDao.findAll(filer.getCheckInDate(), filer.getCheckOutDate());
+        List<Hotel> hotels = hotelDao.findAll(filer.getCityId(), filer.getNumberOfPerson(), filer.getBedType());
+        List<Hotel> responseHotel = new ArrayList<>();
+
+        hotels.stream().forEach(x->{
+            RoomDto room = roomService.findByHotel(hotelMapper.toDto(x));
+            BookingDto bookingDto = bookingService.findByHotel(hotelMapper.toDto(x));
+
+            List<BookingDto> bookings = bookingService.findAllBooking(filer.getCheckInDate(), filer.getCheckOutDate());
+            bookings.stream().forEach(y->{
+                if (y.getCheckInDate().compareTo(filer.getCheckInDate()) > 0 || y.getCheckOutDate().compareTo(filer.getCheckOutDate()) < 0){
+                    return;
+                }else{
+                    responseHotel.add(x);
+                }
+            });
+        });
+
+
+        logger.info("Hotel successfully found and have free room: -> " + hotels);
         return new ResponseEntity<>(hotels, HttpStatus.OK);
+
+
     }
 
     /*- список всех отелей по городу и по рейтингу
@@ -201,3 +228,7 @@ public class HotelServiceImpl implements HotelService {
         номеров
 */
 }
+//list<room>
+//des
+//        type of room
+

@@ -27,6 +27,7 @@ public class RoomServiceImpl implements RoomService {
     Logger logger = LoggerFactory.getLogger(RoomServiceImpl.class);
     @Autowired
     private RoomDao roomDao;
+    private final HotelMapper hotelMapper = HotelMapper.INSTANCE;
 
     @Autowired
     HotelService hotelService;
@@ -105,6 +106,12 @@ public class RoomServiceImpl implements RoomService {
         Room room = roomDao.findById(roomId).orElse(null);
         if (room == null) logger.error("Room not found from database: -> " + room);
         logger.info("Room successfully found from database: -> "+ room);
+        return roomMapper.toDto(room);
+    }
+
+    @Override
+    public RoomDto findByHotel(HotelDto hotelDto) {
+        Room room = roomDao.findByHotel(hotelMapper.toEntity(hotelDto));
         return roomMapper.toDto(room);
     }
 }
