@@ -33,5 +33,6 @@ public class ToSaveRoom {
     LocalDate endDate;
     @NotBlank(message = "Type of Room must not be empty")
     ETypeOfRoom typeOfRoom;
+    Long roomCategoryId;
 
 }

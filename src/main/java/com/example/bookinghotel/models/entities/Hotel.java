@@ -32,6 +32,9 @@ public class Hotel {
     City city;
     @Enumerated(EnumType.STRING)
     EHotelStatus hotelStatus;
+    @OneToMany
+    @JoinColumn(name = "manager_id")
+    List<User> manager;
 
 }
 

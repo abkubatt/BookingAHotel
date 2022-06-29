@@ -155,10 +155,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto findByIdSecond(Long id) {
         Booking booking = bookingDao.findById(id).orElse(null);
-        if (booking != null) {
+        //if (booking != null) {
             return bookingMapper.toDto(booking);
-        }
-        return null;
+        //}
+        //return null;
     }
 
 

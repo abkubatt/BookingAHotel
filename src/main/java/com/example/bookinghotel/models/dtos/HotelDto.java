@@ -22,4 +22,5 @@ public class HotelDto {
     String email;
     CityDto city;
     EHotelStatus hotelStatus;
+    List<UserDto> manager;
 }

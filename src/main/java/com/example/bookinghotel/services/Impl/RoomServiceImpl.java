@@ -7,15 +7,12 @@ import com.example.bookinghotel.mappers.PhotoMapper;
 import com.example.bookinghotel.mappers.PriceMapper;
 import com.example.bookinghotel.mappers.RoomMapper;
 import com.example.bookinghotel.models.dtos.HotelDto;
-import com.example.bookinghotel.models.dtos.PriceDto;
+import com.example.bookinghotel.models.dtos.RoomCategoryDto;
 import com.example.bookinghotel.models.dtos.RoomDto;
 import com.example.bookinghotel.models.entities.Room;
 import com.example.bookinghotel.models.request.ToSaveRoom;
 import com.example.bookinghotel.models.response.Message;
-import com.example.bookinghotel.services.HotelService;
-import com.example.bookinghotel.services.PhotoService;
-import com.example.bookinghotel.services.PriceService;
-import com.example.bookinghotel.services.RoomService;
+import com.example.bookinghotel.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +27,12 @@ public class RoomServiceImpl implements RoomService {
     Logger logger = LoggerFactory.getLogger(RoomServiceImpl.class);
     @Autowired
     private RoomDao roomDao;
-    @Autowired
-    private PriceService priceService;
-    @Autowired private PhotoService photoService;
+
     @Autowired
     HotelService hotelService;
-    private HotelMapper hotelMapper = HotelMapper.INSTANCE;
-    private final PriceMapper priceMapper = PriceMapper.INSTANCE;
     private final RoomMapper roomMapper = RoomMapper.INSTANCE;
-    private final PhotoMapper photoMapper = PhotoMapper.INSTANCE;
+    @Autowired
+    private RoomCategoryService roomCategoryService;
     @Override
     public RoomDto save(RoomDto roomDto) {
         Room room = roomMapper.toEntity(roomDto);
@@ -56,6 +50,7 @@ public class RoomServiceImpl implements RoomService {
         try {
 
             HotelDto hotelDto = hotelService.findById(saveRoom.getHotelId());
+            RoomCategoryDto roomCategoryDto = roomCategoryService.findById(saveRoom.getRoomCategoryId());
 
             RoomDto room = new RoomDto();
             room.setCapacity(saveRoom.getCapacity());
@@ -64,17 +59,8 @@ public class RoomServiceImpl implements RoomService {
             room.setWifi(saveRoom.isWifi());
             room.setHotel(hotelDto);
             room.setTypeOfView(saveRoom.getTypeOfView());
-            room.setTypeOfRoom(saveRoom.getTypeOfRoom());
+            room.setRoomCategory(roomCategoryDto);
             RoomDto savedRoom = save(room);
-
-
-            PriceDto priceDto = new PriceDto();
-            priceDto.setPrice(saveRoom.getPrice());
-            priceDto.setStartDate(saveRoom.getStartDate());
-            priceDto.setEndDate(saveRoom.getEndDate());
-            priceDto.setRoom(savedRoom);
-            PriceDto savedPrice = priceService.save(priceDto);
-
 
             return new ResponseEntity<>(savedRoom, HttpStatus.OK);
         }catch (RoomException r){
@@ -118,7 +104,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomDto findById(Long roomId) {
         Room room = roomDao.findById(roomId).orElse(null);
         if (room == null) logger.error("Room not found from database: -> " + room);
-        logger.info("Room successfully found from datavase: -> "+ room);
+        logger.info("Room successfully found from database: -> "+ room);
         return roomMapper.toDto(room);
     }
 }

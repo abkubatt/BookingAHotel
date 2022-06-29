@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -16,9 +18,21 @@ public interface HotelDao extends JpaRepository<Hotel, Long> {
     @Query(value = "select * from hotels h where h.city_id = ?1 ORDER BY h.current_score DESC", nativeQuery = true)
     List<Hotel> findAllByCity(Long cityId);
 
-    @Query(value = "select * from tb_hotel h inner join tb_room r on r.hotel_id = h.id where h.city_id = ?1 and r.capacity >= ?2 and r.bed_type = :#{#bedtype.name()}", nativeQuery = true)
-    List<Hotel> findAll(Long cityId, int capacityPerson, @Param("bedtype") EBedType bedType);
+//    @Query(value = "select * from tb_hotel h inner join tb_room r on r.hotel_id = h.id where h.city_id = ?1 and r.capacity >= ?2 and r.bed_type = :#{#bedtype.name()}", nativeQuery = true)
+//    List<Hotel> findAll(Long cityId, int capacityPerson, @Param("bedtype") EBedType bedType);
+//    String input = "2020-12-12" ;
+//    LocalDate ld = LocalDate.parse( input );
 
+
+//    @Query(value = "select * from tb_hotel h inner join tb_room r on r.hotel_id = h.id inner join tb_booking b on b.hotel_id = h.id where h.city_id = :cityId and r.capacity =< :capacityPerson  and DATE(b.check_in_date) = :checkInDate and DATE(b.check_out_date) = :checkOutDate and r.bed_type = :#{#bedtype.name()}", nativeQuery = true)
+//    List<Hotel> findAll(@Param("cityId") Long cityId, @Param("capacityPerson") int capacityPerson, @Param("checkInDate") LocalDate checkInDate, @Param("checkOutDate") LocalDate checkOutDate, @Param("bedtype") EBedType bedType);
+  @Query(value = "select * from tb_hotel h inner join tb_room r on r.hotel_id = h.id inner join tb_booking b on b.hotel_id = h.id where h.city_id = ?1 and r.capacity = ?2 and r.bed_type = :#{#bedtype.name()}", nativeQuery = true)
+  List<Hotel> findAll(Long cityId,int capacityPerson, @Param("bedtype") EBedType bedType);
+
+//    @Query(value = "select * from tb_hotel h inner join tb_room r on r.hotel_id = h.id inner join tb_booking b on b.hotel_id = h.id where h.city_id = cast(:cityId AS integer) and r.capacity =< cast(:capacityPerson AS integer) and b.check_in_date <= cast(:checkInDate AS date) and b.check_out_date >= cast(:checkOutDate AS date) and r.bed_type = :#{#bedtype.name()}", nativeQuery = true)
+//    List<Hotel> findAll(@Param("cityId") Long cityId, @Param("capacityPerson") int capacityPerson, @Param("checkInDate") LocalDate checkInDate, @Param("checkOutDate") LocalDate checkOutDate, @Param("bedtype") EBedType bedType);
+
+//                                                                                                                                                                          cast(:dateFrom AS timestamp)
 
 }
 /*- список всех отелей по городу и по рейтингу

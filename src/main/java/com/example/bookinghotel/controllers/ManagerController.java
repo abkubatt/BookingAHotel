@@ -1,10 +1,7 @@
 package com.example.bookinghotel.controllers;
 
 import com.example.bookinghotel.models.dtos.*;
-import com.example.bookinghotel.models.request.ToCancelBooking;
-import com.example.bookinghotel.models.request.ToFiler;
-import com.example.bookinghotel.models.request.ToSaveBooking;
-import com.example.bookinghotel.models.request.ToSaveRoom;
+import com.example.bookinghotel.models.request.*;
 import com.example.bookinghotel.services.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -22,6 +19,8 @@ public class ManagerController {
 
     @Autowired
     ReplyToReviewService replyToReviewService;
+    @Autowired
+    RoomCategoryService roomCategoryService;
     @Autowired
     RoomService roomService;
     @Autowired
@@ -89,5 +88,9 @@ public class ManagerController {
     @PutMapping("/filter")
     public ResponseEntity<?> filter(@RequestBody ToFiler filer){
         return hotelService.filter(filer);
+    }
+    @PostMapping("/saveCategory")
+    public ResponseEntity<?> saveCategory(@RequestBody ToSaveCategoryAndPrice saveCategoryAndPrice){
+        return roomCategoryService.saveCategoryAndPrice(saveCategoryAndPrice);
     }
 }
