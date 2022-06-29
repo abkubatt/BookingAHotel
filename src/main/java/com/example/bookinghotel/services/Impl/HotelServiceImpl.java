@@ -1,5 +1,6 @@
 package com.example.bookinghotel.services.Impl;
 
+import com.example.bookinghotel.dao.BookingDao;
 import com.example.bookinghotel.dao.HotelDao;
 import com.example.bookinghotel.mappers.CityMapper;
 import com.example.bookinghotel.mappers.HotelMapper;
@@ -7,6 +8,7 @@ import com.example.bookinghotel.models.dtos.BookingDto;
 import com.example.bookinghotel.models.dtos.CityDto;
 import com.example.bookinghotel.models.dtos.HotelDto;
 import com.example.bookinghotel.models.dtos.ReviewDto;
+import com.example.bookinghotel.models.entities.Booking;
 import com.example.bookinghotel.models.entities.City;
 import com.example.bookinghotel.models.entities.Hotel;
 import com.example.bookinghotel.models.enums.EHotelStatus;
@@ -39,8 +41,8 @@ public class HotelServiceImpl implements HotelService {
     private CityService cityService;
     private final CityMapper cityMapper  = CityMapper.INSTANCE;
     private final HotelMapper hotelMapper = HotelMapper.INSTANCE;
-   // @Autowired
-   // private BookingService bookingService;
+    @Autowired
+    private BookingDao bookingDao;
     @Autowired
     private ReviewService reviewService;
 
@@ -181,12 +183,11 @@ public class HotelServiceImpl implements HotelService {
     public ResponseEntity<?> filter(ToFiler filer) {
 
         CityDto cityDto = cityService.findById(filer.getCityId());
-//        System.out.println(filer.getCheckInDate());
-//        System.out.println(filer.getCheckOutDate());
-        List<Hotel> hotels = hotelDao.findAll(filer.getCityId(), filer.getNumberOfPerson(), filer.getBedType());
-        //BookingDto bookingDto = bookingService.findByIdSecond(221L);
+        List<Hotel> hotels = hotelDao.findAll(filer.getCityId(), filer.getNumberOfPerson(), filer.getCheckInDate(), filer.getCheckOutDate(),filer.getBedType());
+        List<Booking> bookingDto = bookingDao.findAll(filer.getCheckInDate(), filer.getCheckOutDate());
         return new ResponseEntity<>(hotels, HttpStatus.OK);
     }
+
     /*- список всех отелей по городу и по рейтингу
 
         - фильтр по – городу
