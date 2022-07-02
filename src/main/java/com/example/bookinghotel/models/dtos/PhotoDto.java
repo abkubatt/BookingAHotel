@@ -1,5 +1,6 @@
 package com.example.bookinghotel.models.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -8,9 +9,9 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PhotoDto {
+    @JsonIgnore
     Long id;
     String link;
     int position;
     HotelDto hotel;
-//    HotelDto hotel;
 }

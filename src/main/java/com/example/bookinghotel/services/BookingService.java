@@ -27,7 +27,7 @@ public interface BookingService {
     ResponseEntity<?> sendCode(String email);
     ResponseEntity<?> sendCode2(String email);
     BookingDto findByHotel(HotelDto hotelDto);
-    List<BookingDto> findAllBooking(LocalDate checkInDate, LocalDate checkOutDate);
+    List<BookingDto> findAllBooking(int numberOfPerson, LocalDate checkInDate, LocalDate checkOutDate);
 
 
 }

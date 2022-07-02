@@ -1,6 +1,7 @@
 package com.example.bookinghotel.models.request;
 
 import com.example.bookinghotel.models.enums.EBedType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;

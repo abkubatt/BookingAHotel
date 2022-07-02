@@ -18,7 +18,19 @@ public interface BookingDao extends JpaRepository<Booking, Long> {
     List<Booking> findAll(@Param("checkInDate") Date checkInDate, @Param("checkOutDate") Date checkOutDate);
 
     Booking findByHotel(Hotel hotel);
-    @Query(value = "select * from tb_booking b where b.check_in_date = :checkInDate or b.check_out_date = :checkOutDate or b.check_in_date between :checkInDate and :checkOutDate and b.check_out_date between :checkInDate and :checkOutDate",nativeQuery = true)
-    List<Booking> findAllBooking(@Param("checkInDate") LocalDate checkInDate, @Param("checkOutDate") LocalDate checkOutDate);
+//    @Query(value = "select * from tb_booking b where b.check_in_date = :checkInDate or b.check_out_date = :checkOutDate or b.check_in_date between :checkInDate and :checkOutDate and b.check_out_date between :checkInDate and :checkOutDate",nativeQuery = true)
+//    List<Booking> findAllBooking(@Param("checkInDate") LocalDate checkInDate, @Param("checkOutDate") LocalDate checkOutDate);
+
+    @Query(value = "select * from tb_booking b inner join tb_room r on r.id = b.room_id where h.capacity >= :capacityPerson and b.check_in_date = :checkInDate or b.check_out_date = :checkOutDate or b.check_in_date between :checkInDate and :checkOutDate and b.check_out_date between :checkInDate and :checkOutDate",nativeQuery = true)
+    List<Booking> findAllBooking(@Param("capacityPerson") int capacityPerson,@Param("checkInDate") LocalDate checkInDate, @Param("checkOutDate") LocalDate checkOutDate);
 
 }
+
+
+
+
+
+
+
+
+

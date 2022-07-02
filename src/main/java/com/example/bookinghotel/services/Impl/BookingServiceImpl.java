@@ -235,8 +235,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> findAllBooking(LocalDate checkInDate, LocalDate checkOutDate) {
-        List<Booking> booking = bookingDao.findAllBooking(checkInDate, checkOutDate);
+    public List<BookingDto> findAllBooking(int numberOfPerson,LocalDate checkInDate, LocalDate checkOutDate) {
+        List<Booking> booking = bookingDao.findAllBooking(numberOfPerson,checkInDate, checkOutDate);
         return bookingMapper.toDtoList(booking);
     }
 }

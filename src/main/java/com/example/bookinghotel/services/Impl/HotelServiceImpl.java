@@ -195,10 +195,10 @@ public class HotelServiceImpl implements HotelService {
         List<Hotel> responseHotel = new ArrayList<>();
 
         hotels.stream().forEach(x->{
-            RoomDto room = roomService.findByHotel(hotelMapper.toDto(x));
+            //RoomDto room = roomService.findByHotel(hotelMapper.toDto(x));
             BookingDto bookingDto = bookingService.findByHotel(hotelMapper.toDto(x));
 
-            List<BookingDto> bookings = bookingService.findAllBooking(filer.getCheckInDate(), filer.getCheckOutDate());
+            List<BookingDto> bookings = bookingService.findAllBooking(filer.getNumberOfPerson(),filer.getCheckInDate(), filer.getCheckOutDate());
             bookings.stream().forEach(y->{
                 if (y.getCheckInDate().compareTo(filer.getCheckInDate()) > 0 || y.getCheckOutDate().compareTo(filer.getCheckOutDate()) < 0){
                     return;
@@ -210,7 +210,11 @@ public class HotelServiceImpl implements HotelService {
 
 
         logger.info("Hotel successfully found and have free room: -> " + hotels);
-        return new ResponseEntity<>(hotels, HttpStatus.OK);
+        if (responseHotel != null){
+            return new ResponseEntity<>(responseHotel, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(Message.of("All booking is busy: -> "), HttpStatus.NOT_ACCEPTABLE);
+        }
 
 
     }
@@ -228,7 +232,5 @@ public class HotelServiceImpl implements HotelService {
         номеров
 */
 }
-//list<room>
-//des
-//        type of room
+
 
