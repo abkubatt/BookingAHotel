@@ -32,9 +32,9 @@ public class Hotel {
     City city;
     @Enumerated(EnumType.STRING)
     EHotelStatus hotelStatus;
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "manager_id")
-    List<User> manager;
+    User manager;
 
 }
 

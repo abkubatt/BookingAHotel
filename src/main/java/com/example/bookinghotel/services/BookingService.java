@@ -20,14 +20,14 @@ public interface BookingService {
 
     ResponseEntity<?> delete(BookingDto bookingDto);
 
-    BookingDto findByIdSecond(Long id);
+    BookingDto findById(Long id);
 
     ResponseEntity<?> cancelBooking(ToCancelBooking cancelBooking);
 
     ResponseEntity<?> sendCode(String email);
     ResponseEntity<?> sendCode2(String email);
-    BookingDto findByHotel(HotelDto hotelDto);
-    List<BookingDto> findAllBooking(int numberOfPerson, LocalDate checkInDate, LocalDate checkOutDate);
+    List<BookingDto> findAllByHotel(Long hotelId);
+    List<BookingDto> findAllBooking(Long hotelId, int numberOfPerson, LocalDate checkInDate, LocalDate checkOutDate);
 
 
 }

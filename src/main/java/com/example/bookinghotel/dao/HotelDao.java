@@ -34,6 +34,8 @@ public interface HotelDao extends JpaRepository<Hotel, Long> {
 
 //                                                                                                                                                                          cast(:dateFrom AS timestamp)
 
+    @Query(value = "select * from tb_hotel h where h.hotel_status = ACTIVE", nativeQuery = true)
+    List<Hotel> findAllHotel();
 }
 /*- список всех отелей по городу и по рейтингу
 

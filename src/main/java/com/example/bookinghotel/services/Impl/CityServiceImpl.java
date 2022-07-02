@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CityServiceImpl implements CityService {
 
@@ -72,5 +74,13 @@ public class CityServiceImpl implements CityService {
             logger.error("City not found from database: -> " + cityId);
             return null;
         }
+    }
+
+    @Override
+    public ResponseEntity<?> findAll() {
+        List<City> cities = cityDao.findAllByName();
+        if (cities == null) logger.error("Failed while finding cities");
+        logger.info("Cities successfully found from database" + cities);
+        return new ResponseEntity<>(cityMapper.toDtoList(cities), HttpStatus.OK);
     }
 }

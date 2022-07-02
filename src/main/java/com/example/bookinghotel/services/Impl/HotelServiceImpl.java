@@ -5,10 +5,7 @@ import com.example.bookinghotel.dao.HotelDao;
 import com.example.bookinghotel.mappers.CityMapper;
 import com.example.bookinghotel.mappers.HotelMapper;
 import com.example.bookinghotel.models.dtos.*;
-import com.example.bookinghotel.models.entities.Booking;
-import com.example.bookinghotel.models.entities.City;
-import com.example.bookinghotel.models.entities.Hotel;
-import com.example.bookinghotel.models.entities.Room;
+import com.example.bookinghotel.models.entities.*;
 import com.example.bookinghotel.models.enums.EHotelStatus;
 import com.example.bookinghotel.models.request.ToFiler;
 import com.example.bookinghotel.models.response.Message;
@@ -45,9 +42,15 @@ public class HotelServiceImpl implements HotelService {
     private BookingDao bookingDao;
     @Autowired
     private ReviewService reviewService;
+    @Autowired
+    private UserService userService;
+
 
     @Override
+    @Transactional
     public ResponseEntity<?> save(HotelDto hotelDto) {
+        ResponseEntity<?> savedUser = userService.save(hotelDto.getManager());
+        hotelDto.setManager((UserDto) savedUser.getBody());
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         hotel.setHotelStatus(EHotelStatus.NOT_AVAILABLE);
         Hotel saveHotel = hotelDao.save(hotel);
@@ -174,7 +177,8 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public List<HotelDto> findAll() {
-        return hotelMapper.toDtoList(hotelDao.findAll());
+        List<Hotel> hotels = hotelDao.findAllHotel();
+        return hotelMapper.toDtoList(hotels);
     }
 
     //    HotelDto hotel = hotelService.findById(hotels.get(0).getId());
@@ -192,18 +196,30 @@ public class HotelServiceImpl implements HotelService {
 
         CityDto cityDto = cityService.findById(filer.getCityId());
         List<Hotel> hotels = hotelDao.findAll(filer.getCityId(), filer.getNumberOfPerson(), filer.getBedType());
-        List<Hotel> responseHotel = new ArrayList<>();
+        List<RoomDto> responseHotel = new ArrayList<>();
+        //List<Hotel> responseHotel = new ArrayList<>();
 
         hotels.stream().forEach(x->{
+            RoomDto rooms = roomService.findByHotel(hotelMapper.toDto(x));
             //RoomDto room = roomService.findByHotel(hotelMapper.toDto(x));
-            BookingDto bookingDto = bookingService.findByHotel(hotelMapper.toDto(x));
+            List<BookingDto> bookingDto = bookingService.findAllByHotel(x.getId());
+            System.out.println(bookingDto.size());
+            //List<BookingDto> bookings = bookingService.findAllBooking(x.getId(), filer.getNumberOfPerson(),filer.getCheckInDate(), filer.getCheckOutDate());
+            //System.out.println(bookings.size());
 
-            List<BookingDto> bookings = bookingService.findAllBooking(filer.getNumberOfPerson(),filer.getCheckInDate(), filer.getCheckOutDate());
-            bookings.stream().forEach(y->{
-                if (y.getCheckInDate().compareTo(filer.getCheckInDate()) > 0 || y.getCheckOutDate().compareTo(filer.getCheckOutDate()) < 0){
-                    return;
+
+            bookingDto.stream().forEach(y->{
+                System.out.println(y.getCheckInDate()  +" " + y.getCheckOutDate());
+//                int ok = y.getCheckInDate().compareTo(filer.getCheckInDate());
+//                System.out.println(ok);
+//                int ok2 = y.getCheckOutDate().compareTo(filer.getCheckOutDate());
+//                System.out.println(ok2);
+
+
+                if (y.getCheckInDate().equals(filer.getCheckInDate()) || y.getCheckOutDate().equals(filer.getCheckOutDate()) || y.getCheckInDate().isAfter(filer.getCheckInDate()) || y.getCheckOutDate().isBefore(filer.getCheckOutDate())){
+                    System.out.println("Booking is busy");
                 }else{
-                    responseHotel.add(x);
+                    responseHotel.add(rooms);
                 }
             });
         });
@@ -231,6 +247,7 @@ public class HotelServiceImpl implements HotelService {
         - получить полную информацию по отелю с доступными вариантами
         номеров
 */
+
 }
 
 

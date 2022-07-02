@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Book;
 
@@ -24,6 +25,7 @@ public class BookHistoryServiceImpl implements BookHistoryService {
     private final BookHistoryMapper bookHistoryMapper = BookHistoryMapper.INSTANCE;
 
     @Override
+    @Transactional
     public ResponseEntity<?> save(BookHistoryDto bookHistoryDto) {
         BookHistory bookHistory = bookHistoryMapper.toEntity(bookHistoryDto);
         bookHistory.setActive(true);

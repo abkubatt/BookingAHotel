@@ -154,7 +154,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto findByIdSecond(Long id) {
+    public BookingDto findById(Long id) {
         Booking booking = bookingDao.findById(id).orElse(null);
         //if (booking != null) {
             return bookingMapper.toDto(booking);
@@ -167,15 +167,15 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public ResponseEntity<?> cancelBooking(ToCancelBooking toCancelBooking) {
         try {
-            BookingDto bookingDto2 = findByIdSecond(toCancelBooking.getBookingId());
-            Booking entityBooking = bookingMapper.toEntity(bookingDto2);
+            BookingDto booking = findById(toCancelBooking.getBookingId());
+            Booking entityBooking = bookingMapper.toEntity(booking);
             entityBooking.setStatusBooking(EStatusBooking.INACTIVE);
             ResponseEntity<?> canceledBooking = update(bookingMapper.toDto(entityBooking));
             UserDto userDto = userService.findById(toCancelBooking.getUserId());
 
 
             BookHistoryDto bookHistory = new BookHistoryDto();
-            bookHistory.setBooking(bookingDto2);
+            bookHistory.setBooking(booking);
             bookHistory.setChangeDate(LocalDate.now());
             bookHistory.setComment(toCancelBooking.getComment());
             bookHistory.setRoom(roomMapper.toDto(entityBooking.getRoom()));
@@ -229,14 +229,21 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto findByHotel(HotelDto hotelDto) {
-        Booking booking = bookingDao.findByHotel(hotelMapper.toEntity(hotelDto));
-        return bookingMapper.toDto(booking);
+    public List<BookingDto> findAllByHotel(Long hotelId) {
+        List<Booking> booking = bookingDao.findAllByHotel(hotelId);
+        System.out.println(booking.get(0).getCheckOutDate());
+        System.out.println(booking.get(0).getStatusBooking());
+        if (booking == null) logger.error("Bookings not found from database with this hotelId" + hotelId);
+        logger.info("Bookings successfully found from database: -> " + booking);
+        return bookingMapper.toDtoList(booking);
     }
 
+
     @Override
-    public List<BookingDto> findAllBooking(int numberOfPerson,LocalDate checkInDate, LocalDate checkOutDate) {
-        List<Booking> booking = bookingDao.findAllBooking(numberOfPerson,checkInDate, checkOutDate);
+    public List<BookingDto> findAllBooking(Long hotelId,int numberOfPerson,LocalDate checkInDate, LocalDate checkOutDate) {
+        List<Booking> booking = bookingDao.findAllBooking(hotelId,numberOfPerson,checkInDate, checkOutDate);
+        if (booking == null) logger.error("Booking not found from database with this information: -> " + numberOfPerson + " "+ checkInDate +  " "+ " " +checkOutDate);
+        logger.info("Booking successfully found from database : -> " + booking);
         return bookingMapper.toDtoList(booking);
     }
 }

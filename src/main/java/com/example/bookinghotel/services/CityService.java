@@ -12,4 +12,5 @@ public interface CityService {
     ResponseEntity<?> delete(CityDto cityDto);
 
     CityDto findById(Long cityId);
+    ResponseEntity<?> findAll();
 }
