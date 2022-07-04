@@ -6,10 +6,13 @@ import com.example.bookinghotel.mappers.CityMapper;
 import com.example.bookinghotel.mappers.HotelMapper;
 import com.example.bookinghotel.models.dtos.*;
 import com.example.bookinghotel.models.entities.*;
+import com.example.bookinghotel.models.enums.EBedType;
 import com.example.bookinghotel.models.enums.EHotelStatus;
+import com.example.bookinghotel.models.enums.EStatusBooking;
 import com.example.bookinghotel.models.request.ToFiler;
 import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.*;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class HotelServiceImpl implements HotelService {
@@ -233,6 +237,39 @@ public class HotelServiceImpl implements HotelService {
         }
 
 
+    }
+
+    @Override
+    public ResponseEntity<?> filter2(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, EBedType bedType) {
+        List<Hotel> hotels = hotelDao.findAllByCityAndBedType(cityId,bedType);
+
+        List<Hotel> availableHotels = new ArrayList<>();
+
+        hotels.stream().forEach(x->{
+            List<RoomDto> rooms = roomService.findRoomsByHotel(hotelMapper.toDto(x),bedType);
+            List<RoomDto> availableRooms = new ArrayList<>();
+
+            rooms.stream().forEach(y->{
+                List<BookingDto> bookings = bookingService.findAllByRoomAndActive(y, EStatusBooking.ACTIVE);
+                if (bookings.isEmpty()){
+                    availableRooms.add(y);
+                }else{
+                    boolean isBooked = false;
+                    bookings.stream().forEach(z->{
+                        if (checkIsBooked(z,checkInDate,checkOutDate)){
+
+                        }
+                    });
+                }
+            });
+        });
+
+        return ResponseEntity.ok(hotels);
+    }
+
+
+    private boolean checkIsBooked(BookingDto bookingDto, LocalDate startDate, LocalDate endDate){
+        return false;
     }
 
     /*- список всех отелей по городу и по рейтингу

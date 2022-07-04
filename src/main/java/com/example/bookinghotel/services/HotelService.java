@@ -2,6 +2,7 @@ package com.example.bookinghotel.services;
 
 import com.example.bookinghotel.models.dtos.CityDto;
 import com.example.bookinghotel.models.dtos.HotelDto;
+import com.example.bookinghotel.models.enums.EBedType;
 import com.example.bookinghotel.models.request.ToFiler;
 import org.springframework.http.ResponseEntity;
 
@@ -29,4 +30,5 @@ public interface HotelService {
     List<HotelDto> findAll();
 
     ResponseEntity<?> filter(ToFiler filer);
+    ResponseEntity<?> filter2(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, EBedType bedType);
 }

@@ -2,6 +2,9 @@ package com.example.bookinghotel.dao;
 
 import com.example.bookinghotel.models.entities.Booking;
 import com.example.bookinghotel.models.entities.Hotel;
+import com.example.bookinghotel.models.entities.Room;
+import com.example.bookinghotel.models.enums.EBedType;
+import com.example.bookinghotel.models.enums.EStatusBooking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,6 +31,7 @@ public interface BookingDao extends JpaRepository<Booking, Long> {
 
 
 
+    List<Booking> findAllByRoomAndStatusBooking(Room room, EStatusBooking statusBooking);
 
 
 //    @Query(value = "select * from tb_booking b inner join tb_room r on r.id = b.room_id where r.capacity >= :capacityPerson and b.check_out_date between :checkInDate and :checkOutDate",nativeQuery = true)

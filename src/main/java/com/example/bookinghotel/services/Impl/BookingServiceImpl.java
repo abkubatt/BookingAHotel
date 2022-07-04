@@ -246,4 +246,10 @@ public class BookingServiceImpl implements BookingService {
         logger.info("Booking successfully found from database : -> " + booking);
         return bookingMapper.toDtoList(booking);
     }
+
+    @Override
+    public List<BookingDto> findAllByRoomAndActive(RoomDto roomDto, EStatusBooking statusBooking) {
+        List<Booking> bookings = bookingDao.findAllByRoomAndStatusBooking(roomMapper.toEntity(roomDto), statusBooking);
+        return bookingMapper.toDtoList(bookings);
+    }
 }

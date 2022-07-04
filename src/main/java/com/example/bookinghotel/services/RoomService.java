@@ -2,8 +2,11 @@ package com.example.bookinghotel.services;
 
 import com.example.bookinghotel.models.dtos.HotelDto;
 import com.example.bookinghotel.models.dtos.RoomDto;
+import com.example.bookinghotel.models.enums.EBedType;
 import com.example.bookinghotel.models.request.ToSaveRoom;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface RoomService {
 
@@ -15,5 +18,7 @@ public interface RoomService {
 
     RoomDto findById(Long roomId);
     RoomDto findByHotel(HotelDto hotelDto);
+    List<RoomDto> findRoomsByHotel(HotelDto hotelDto, EBedType bedType);
+
 
 }

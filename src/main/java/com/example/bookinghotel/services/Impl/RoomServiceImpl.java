@@ -9,7 +9,9 @@ import com.example.bookinghotel.mappers.RoomMapper;
 import com.example.bookinghotel.models.dtos.HotelDto;
 import com.example.bookinghotel.models.dtos.RoomCategoryDto;
 import com.example.bookinghotel.models.dtos.RoomDto;
+import com.example.bookinghotel.models.entities.Hotel;
 import com.example.bookinghotel.models.entities.Room;
+import com.example.bookinghotel.models.enums.EBedType;
 import com.example.bookinghotel.models.request.ToSaveRoom;
 import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.*;
@@ -21,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -113,5 +117,11 @@ public class RoomServiceImpl implements RoomService {
     public RoomDto findByHotel(HotelDto hotelDto) {
         Room room = roomDao.findByHotel(hotelMapper.toEntity(hotelDto));
         return roomMapper.toDto(room);
+    }
+
+    @Override
+    public List<RoomDto> findRoomsByHotel(HotelDto hotelDto, EBedType bedType) {
+        List<Room> rooms = roomDao.findAllByActiveTrueAndHotelAndBedType(hotelMapper.toEntity(hotelDto),bedType);
+        return roomMapper.toDtoList(rooms);
     }
 }

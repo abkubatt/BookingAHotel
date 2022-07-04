@@ -2,6 +2,8 @@ package com.example.bookinghotel.services;
 
 import com.example.bookinghotel.models.dtos.BookingDto;
 import com.example.bookinghotel.models.dtos.HotelDto;
+import com.example.bookinghotel.models.dtos.RoomDto;
+import com.example.bookinghotel.models.enums.EStatusBooking;
 import com.example.bookinghotel.models.request.ToCancelBooking;
 import com.example.bookinghotel.models.request.ToSaveBooking;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +31,6 @@ public interface BookingService {
     List<BookingDto> findAllByHotel(Long hotelId);
     List<BookingDto> findAllBooking(Long hotelId, int numberOfPerson, LocalDate checkInDate, LocalDate checkOutDate);
 
+    List<BookingDto> findAllByRoomAndActive(RoomDto roomDto, EStatusBooking statusBooking);
 
 }
