@@ -2,7 +2,9 @@ package com.example.bookinghotel.services.Impl;
 
 import com.example.bookinghotel.dao.PriceDao;
 import com.example.bookinghotel.mappers.PriceMapper;
+import com.example.bookinghotel.mappers.RoomCategoryMapper;
 import com.example.bookinghotel.models.dtos.PriceDto;
+import com.example.bookinghotel.models.dtos.RoomCategoryDto;
 import com.example.bookinghotel.models.entities.Price;
 import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.PriceService;
@@ -13,12 +15,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class PriceServiceImpl implements PriceService {
     Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
     @Autowired
     private PriceDao priceDao;
     private final PriceMapper priceMapper = PriceMapper.INSTANCE;
+    private final RoomCategoryMapper roomCategoryMapper = RoomCategoryMapper.INSTANCE;
 
 //    @Override
 //    public ResponseEntity<?> save(PriceDto priceDto) {
@@ -65,5 +70,11 @@ public class PriceServiceImpl implements PriceService {
             logger.error("Failed while deleting price: -> " + priceDto);
             return new ResponseEntity<>(Message.of("Price not deleted"), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public PriceDto findPrice(RoomCategoryDto roomCategoryDto, LocalDate endDate) {
+        Price price = priceDao.findByRoomCategoryAndStartDateAndEndDate(roomCategoryDto.getId(),endDate);
+        return priceMapper.toDto(price);
     }
 }

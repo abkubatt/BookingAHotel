@@ -4,13 +4,16 @@ import com.example.bookinghotel.dao.BookingDao;
 import com.example.bookinghotel.dao.HotelDao;
 import com.example.bookinghotel.mappers.CityMapper;
 import com.example.bookinghotel.mappers.HotelMapper;
+import com.example.bookinghotel.mappers.RoomMapper;
 import com.example.bookinghotel.models.dtos.*;
 import com.example.bookinghotel.models.entities.*;
 import com.example.bookinghotel.models.enums.EBedType;
 import com.example.bookinghotel.models.enums.EHotelStatus;
 import com.example.bookinghotel.models.enums.EStatusBooking;
 import com.example.bookinghotel.models.request.ToFiler;
+import com.example.bookinghotel.models.response.HotelFilterResponse;
 import com.example.bookinghotel.models.response.Message;
+import com.example.bookinghotel.models.response.RoomFilterResponse;
 import com.example.bookinghotel.services.*;
 import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
@@ -22,7 +25,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,6 +53,11 @@ public class HotelServiceImpl implements HotelService {
     private ReviewService reviewService;
     @Autowired
     private UserService userService;
+    private final RoomMapper roomMapper = RoomMapper.INSTANCE;
+    @Autowired
+    private PriceService priceService;
+    @Autowired
+    private RoomCategoryService roomCategoryService;
 
 
     @Override
@@ -242,6 +252,8 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public ResponseEntity<?> filter2(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, EBedType bedType) {
         List<Hotel> hotels = hotelDao.findAllByCityAndBedType(cityId, bedType);
+        List<HotelFilterResponse> filteredHotels = new ArrayList<>();
+
 
         List<Hotel> availableHotels = new ArrayList<>();
 
@@ -268,12 +280,15 @@ public class HotelServiceImpl implements HotelService {
             });
             if (!availableRooms.isEmpty()) {
                 availableHotels.add(x);
+
             }
+            HotelFilterResponse hotelFilterResponse = formHotelResponse(x,availableRooms,checkInDate,checkOutDate);
+            filteredHotels.add(hotelFilterResponse);
+
+
         });
-        return new ResponseEntity<>(availableHotels, HttpStatus.OK);
+        return new ResponseEntity<>(filteredHotels, HttpStatus.OK);
     }
-
-
 
 
     private boolean checkIsBooked(BookingDto bookingDto, LocalDate startDate, LocalDate endDate) {
@@ -289,6 +304,43 @@ public class HotelServiceImpl implements HotelService {
         } else {
             return false;
         }
+    }
+
+    private HotelFilterResponse formHotelResponse(Hotel hotel, List<RoomDto> rooms,LocalDate checkIn, LocalDate checkOut){
+        HotelFilterResponse hotelResponse = new HotelFilterResponse();
+        hotelResponse.setId(hotel.getId());
+        hotelResponse.setDescription(hotel.getDescription());
+        hotelResponse.setAddress(hotel.getAddress());
+        hotelResponse.setEmail(hotel.getEmail());
+        hotelResponse.setCurrentScore(hotel.getCurrentScore());
+        hotelResponse.setPhone(hotel.getPhone());
+
+        List<RoomFilterResponse> roomResponse = new ArrayList<>();
+        rooms.stream().forEach(room -> {
+            PriceDto priceDto = priceService.findPrice(room.getRoomCategory(),LocalDate.now());
+
+            Duration diff = Duration.between(checkIn.atStartOfDay(), checkOut.atStartOfDay());
+            long diffDays = diff.toDays();
+            float countPrice = diffDays * priceDto.getPrice();
+
+            RoomFilterResponse roomFilterResponse = RoomFilterResponse.builder()
+                    .bedType(room.getBedType())
+                    .capacity(room.getCapacity())
+                    .checkInDate(checkIn)
+                    .checkOutDate(checkOut)
+                    .id(room.getId())
+                    .square(room.getSquare())
+                    .typeOfView(room.getTypeOfView())
+                    .wifi(room.isWifi())
+                    .totalSum(countPrice)
+                    .build();
+            roomResponse.add(roomFilterResponse);
+        });
+
+        hotelResponse.setAvailableRooms(roomResponse);
+
+        return hotelResponse;
+
     }
 
     /*- список всех отелей по городу и по рейтингу
