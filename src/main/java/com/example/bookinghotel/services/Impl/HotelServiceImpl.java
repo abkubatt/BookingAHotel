@@ -203,7 +203,7 @@ public class HotelServiceImpl implements HotelService {
         List<RoomDto> responseHotel = new ArrayList<>();
         //List<Hotel> responseHotel = new ArrayList<>();
 
-        hotels.stream().forEach(x->{
+        hotels.stream().forEach(x -> {
             RoomDto rooms = roomService.findByHotel(hotelMapper.toDto(x));
             //RoomDto room = roomService.findByHotel(hotelMapper.toDto(x));
             List<BookingDto> bookingDto = bookingService.findAllByHotel(x.getId());
@@ -212,17 +212,17 @@ public class HotelServiceImpl implements HotelService {
             //System.out.println(bookings.size());
 
 
-            bookingDto.stream().forEach(y->{
-                System.out.println(y.getCheckInDate()  +" " + y.getCheckOutDate());
+            bookingDto.stream().forEach(y -> {
+                System.out.println(y.getCheckInDate() + " " + y.getCheckOutDate());
 //                int ok = y.getCheckInDate().compareTo(filer.getCheckInDate());
 //                System.out.println(ok);
 //                int ok2 = y.getCheckOutDate().compareTo(filer.getCheckOutDate());
 //                System.out.println(ok2);
 
 
-                if (y.getCheckInDate().equals(filer.getCheckInDate()) || y.getCheckOutDate().equals(filer.getCheckOutDate()) || y.getCheckInDate().isAfter(filer.getCheckInDate()) || y.getCheckOutDate().isBefore(filer.getCheckOutDate())){
+                if (y.getCheckInDate().equals(filer.getCheckInDate()) || y.getCheckOutDate().equals(filer.getCheckOutDate()) || y.getCheckInDate().isAfter(filer.getCheckInDate()) || y.getCheckOutDate().isBefore(filer.getCheckOutDate())) {
                     System.out.println("Booking is busy");
-                }else{
+                } else {
                     responseHotel.add(rooms);
                 }
             });
@@ -230,9 +230,9 @@ public class HotelServiceImpl implements HotelService {
 
 
         logger.info("Hotel successfully found and have free room: -> " + hotels);
-        if (responseHotel != null){
+        if (responseHotel != null) {
             return new ResponseEntity<>(responseHotel, HttpStatus.OK);
-        }else {
+        } else {
             return new ResponseEntity<>(Message.of("All booking is busy: -> "), HttpStatus.NOT_ACCEPTABLE);
         }
 
@@ -241,35 +241,54 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public ResponseEntity<?> filter2(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, EBedType bedType) {
-        List<Hotel> hotels = hotelDao.findAllByCityAndBedType(cityId,bedType);
+        List<Hotel> hotels = hotelDao.findAllByCityAndBedType(cityId, bedType);
 
         List<Hotel> availableHotels = new ArrayList<>();
 
-        hotels.stream().forEach(x->{
-            List<RoomDto> rooms = roomService.findRoomsByHotel(hotelMapper.toDto(x),bedType);
+        hotels.stream().forEach(x -> {
+            List<RoomDto> rooms = roomService.findRoomsByHotel(hotelMapper.toDto(x), bedType);
             List<RoomDto> availableRooms = new ArrayList<>();
 
-            rooms.stream().forEach(y->{
+            rooms.stream().forEach(y -> {
                 List<BookingDto> bookings = bookingService.findAllByRoomAndActive(y, EStatusBooking.ACTIVE);
-                if (bookings.isEmpty()){
+                if (bookings.isEmpty()) {
                     availableRooms.add(y);
-                }else{
-                    boolean isBooked = false;
-                    bookings.stream().forEach(z->{
-                        if (checkIsBooked(z,checkInDate,checkOutDate)){
-
+                } else {
+                    AtomicBoolean isBooked = new AtomicBoolean(false);
+                    bookings.stream().forEach(booking -> {
+                        if (checkIsBooked(booking, checkInDate, checkOutDate)) {
+                            System.out.println("Room is booked");
+                            isBooked.set(true);
                         }
                     });
+                    if (isBooked.equals(false)) {
+                        availableRooms.add(y);
+                    }
                 }
             });
+            if (!availableRooms.isEmpty()) {
+                availableHotels.add(x);
+            }
         });
-
-        return ResponseEntity.ok(hotels);
+        return new ResponseEntity<>(availableHotels, HttpStatus.OK);
     }
 
 
-    private boolean checkIsBooked(BookingDto bookingDto, LocalDate startDate, LocalDate endDate){
-        return false;
+
+
+    private boolean checkIsBooked(BookingDto bookingDto, LocalDate startDate, LocalDate endDate) {
+        if (startDate.equals(bookingDto.getCheckInDate())
+                || startDate.equals(bookingDto.getCheckOutDate())
+                || (startDate.isAfter(bookingDto.getCheckInDate()) && startDate.isBefore(bookingDto.getCheckOutDate()))
+                || endDate.equals(bookingDto.getCheckInDate())
+                || endDate.equals(bookingDto.getCheckOutDate())
+                || (endDate.isAfter(bookingDto.getCheckInDate()) && endDate.isBefore(bookingDto.getCheckOutDate()))
+                || (startDate.isBefore(bookingDto.getCheckInDate()) && endDate.isAfter(bookingDto.getCheckOutDate()))
+        ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*- список всех отелей по городу и по рейтингу
