@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReviewDto {
-    @JsonIgnore
     Long id;
     UserDto guest;
     HotelDto hotel;

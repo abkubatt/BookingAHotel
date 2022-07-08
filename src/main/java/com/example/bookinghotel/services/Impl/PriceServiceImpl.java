@@ -73,9 +73,8 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public PriceDto findPrice(RoomCategoryDto roomCategoryDto) {
-        Price price = priceDao.findByRoomCategoryAndStartDateAndEndDate(roomCategoryDto.getId(),LocalDate.now());
-        System.out.println(price + "ROOMCATEGORY");
+    public PriceDto findPrice(RoomCategoryDto roomCategoryDto,LocalDate date) {
+        Price price = priceDao.findByRoomCategoryAndStartDateAndEndDate(roomCategoryDto.getId(),date);
         return priceMapper.toDto(price);
     }
 }

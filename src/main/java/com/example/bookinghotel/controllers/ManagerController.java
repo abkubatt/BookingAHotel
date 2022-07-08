@@ -85,10 +85,7 @@ public class ManagerController {
     public ResponseEntity<?> uploadPhotoToHotel(@RequestParam MultipartFile file, @RequestParam Long hotelId, @RequestParam int position){
         return fileService.uploadImageToHotel(file,hotelId,position);
     }
-    @PutMapping("/filter")
-    public ResponseEntity<?> filter(@RequestBody ToFiler filer){
-        return hotelService.filter(filer);
-    }
+
     @PostMapping("/saveCategory")
     public ResponseEntity<?> saveCategory(@RequestBody ToSaveCategoryAndPrice saveCategoryAndPrice){
         return roomCategoryService.saveCategoryAndPrice(saveCategoryAndPrice);

@@ -4,6 +4,7 @@ import com.example.bookinghotel.models.dtos.BookingDto;
 import com.example.bookinghotel.models.dtos.ReviewDto;
 import com.example.bookinghotel.models.enums.EBedType;
 import com.example.bookinghotel.models.request.ToFiler;
+import com.example.bookinghotel.models.response.HotelFilterResponse;
 import com.example.bookinghotel.services.BookingService;
 import com.example.bookinghotel.services.HotelService;
 import com.example.bookinghotel.services.ReviewService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/guest")
@@ -48,6 +50,10 @@ public class GuestController {
                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
                                     @RequestParam int guestAmount,
                                     @RequestParam EBedType bedType){
-        return hotelService.filter2(cityId,checkInDate,checkOutDate,bedType,guestAmount);
+        return hotelService.filter(cityId,checkInDate,checkOutDate,bedType,guestAmount);
+    }
+    @PutMapping("/getByRating")
+    public ResponseEntity<?> Rating(@RequestBody List<HotelFilterResponse> hotels){
+        return hotelService.Rating(hotels);
     }
 }

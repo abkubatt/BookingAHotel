@@ -29,8 +29,10 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Service
 public class HotelServiceImpl implements HotelService {
@@ -156,8 +158,12 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public ResponseEntity<?> findAllHotelsByRating(HotelDto hotelDto) {
-        return null;
+    public ResponseEntity<?> Rating(List<HotelFilterResponse> hotels) {
+
+        List<HotelFilterResponse> sortedList = hotels.stream().sorted(Comparator.comparing(HotelFilterResponse::getCurrentScore)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(sortedList,HttpStatus.OK);
+
     }
 
 
@@ -195,62 +201,9 @@ public class HotelServiceImpl implements HotelService {
         return hotelMapper.toDtoList(hotels);
     }
 
-    //    HotelDto hotel = hotelService.findById(hotels.get(0).getId());
-//    Hotel checkingHotel = new Hotel();
-//    checkingHotel = hotelMapper.toEntity(hotel);
-//
-//    BookingDto bookingDto = bookingService.findByHotel(hotelMapper.toDto(checkingHotel));
-//    RoomDto roomDto = roomService.findByHotel(hotelMapper.toDto(checkingHotel));
-//        if (checkingHotel.getCity().equals(filer.getCityId()) && bookingDto.getCheckInDate().equals(filer.getCheckInDate()) && bookingDto.getCheckOutDate().equals(filer.getCheckOutDate()) && roomDto.getCapacity() == filer.getNumberOfPerson() && roomDto.getBedType().equals(filer.getBedType())){
-//            logger.info("Hotel(room) is busy: -> " + filer);
-//            return new ResponseEntity<>(Message.of("This hotel's room is booked by someone"), HttpStatus.NOT_FOUND);
     @Override
     @Transactional
-    public ResponseEntity<?> filter(ToFiler filer) {
-
-        CityDto cityDto = cityService.findById(filer.getCityId());
-        List<Hotel> hotels = hotelDao.findAll(filer.getCityId(), filer.getNumberOfPerson(), filer.getBedType());
-        List<RoomDto> responseHotel = new ArrayList<>();
-        //List<Hotel> responseHotel = new ArrayList<>();
-
-        hotels.stream().forEach(x -> {
-            RoomDto rooms = roomService.findByHotel(hotelMapper.toDto(x));
-            //RoomDto room = roomService.findByHotel(hotelMapper.toDto(x));
-            List<BookingDto> bookingDto = bookingService.findAllByHotel(x.getId());
-            System.out.println(bookingDto.size());
-            //List<BookingDto> bookings = bookingService.findAllBooking(x.getId(), filer.getNumberOfPerson(),filer.getCheckInDate(), filer.getCheckOutDate());
-            //System.out.println(bookings.size());
-
-
-            bookingDto.stream().forEach(y -> {
-                System.out.println(y.getCheckInDate() + " " + y.getCheckOutDate());
-//                int ok = y.getCheckInDate().compareTo(filer.getCheckInDate());
-//                System.out.println(ok);
-//                int ok2 = y.getCheckOutDate().compareTo(filer.getCheckOutDate());
-//                System.out.println(ok2);
-
-
-                if (y.getCheckInDate().equals(filer.getCheckInDate()) || y.getCheckOutDate().equals(filer.getCheckOutDate()) || y.getCheckInDate().isAfter(filer.getCheckInDate()) || y.getCheckOutDate().isBefore(filer.getCheckOutDate())) {
-                    System.out.println("Booking is busy");
-                } else {
-                    responseHotel.add(rooms);
-                }
-            });
-        });
-
-
-        logger.info("Hotel successfully found and have free room: -> " + hotels);
-        if (responseHotel != null) {
-            return new ResponseEntity<>(responseHotel, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(Message.of("All booking is busy: -> "), HttpStatus.NOT_ACCEPTABLE);
-        }
-
-
-    }
-
-    @Override
-    public ResponseEntity<?> filter2(Long cityId, LocalDate checkInDate,LocalDate checkOutDate, EBedType bedType,int capacity) {
+    public ResponseEntity<?> filter(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, EBedType bedType, int capacity) {
         List<Hotel> hotels = hotelDao.findAllByCityAndBedType(cityId, bedType);
         List<HotelFilterResponse> filteredHotels = new ArrayList<>();
 
@@ -258,7 +211,7 @@ public class HotelServiceImpl implements HotelService {
         List<Hotel> availableHotels = new ArrayList<>();
 
         hotels.stream().forEach(x -> {
-            List<RoomDto> rooms = roomService.findRoomsByHotel(hotelMapper.toDto(x), bedType,capacity);
+            List<RoomDto> rooms = roomService.findRoomsByHotel(hotelMapper.toDto(x), bedType, capacity);
             List<RoomDto> availableRooms = new ArrayList<>();
 
             rooms.stream().forEach(y -> {
@@ -282,13 +235,13 @@ public class HotelServiceImpl implements HotelService {
                 availableHotels.add(x);
 
             }
-            HotelFilterResponse hotelFilterResponse = formHotelResponse(x,availableRooms,checkInDate,checkOutDate);
+            HotelFilterResponse hotelFilterResponse = formHotelResponse(x, availableRooms, checkInDate, checkOutDate);
             filteredHotels.add(hotelFilterResponse);
-            filteredHotels.forEach(System.out::println);
 
 
         });
         return new ResponseEntity<>(filteredHotels, HttpStatus.OK);
+
     }
 
 
@@ -307,7 +260,8 @@ public class HotelServiceImpl implements HotelService {
         }
     }
 
-    private HotelFilterResponse formHotelResponse(Hotel hotel, List<RoomDto> rooms,LocalDate checkIn, LocalDate checkOut){
+
+    private HotelFilterResponse formHotelResponse(Hotel hotel, List<RoomDto> rooms, LocalDate checkIn, LocalDate checkOut) {
         HotelFilterResponse hotelResponse = new HotelFilterResponse();
         hotelResponse.setId(hotel.getId());
         hotelResponse.setDescription(hotel.getDescription());
@@ -316,56 +270,76 @@ public class HotelServiceImpl implements HotelService {
         hotelResponse.setCurrentScore(hotel.getCurrentScore());
         hotelResponse.setPhone(hotel.getPhone());
         hotelResponse.setName(hotel.getName());
+        hotelResponse.setCurrentScore(hotel.getCurrentScore());
 
         List<RoomFilterResponse> roomResponse = new ArrayList<>();
         rooms.stream().forEach(room -> {
-            System.out.println(room.getRoomCategory()+" categoryp ");
-            PriceDto priceDto = priceService.findPrice(room.getRoomCategory());
-            System.out.println(priceDto.getRoomCategory() + " priceDto");
-            System.out.println(priceDto.getPrice());
+            PriceDto priceCheckIn = priceService.findPrice(room.getRoomCategory(), checkIn);
+            PriceDto priceCheckOut = priceService.findPrice(room.getRoomCategory(), checkOut);
+            if (priceCheckIn != null && priceCheckOut != null) {
+                if (priceCheckIn.getPrice() == priceCheckOut.getPrice()) {
+                    Duration diff = Duration.between(checkIn.atStartOfDay(), checkOut.atStartOfDay());
 
-            System.out.println(checkIn);
-            System.out.println(checkOut);
-            Duration diff = Duration.between(checkIn.atStartOfDay(), checkOut.atStartOfDay());
+                    long diffDays = diff.toDays();
+                    diffDays += 1;
+                    float countPrice = diffDays * priceCheckIn.getPrice();
 
-            long diffDays = diff.toDays();
-            float countPrice = diffDays * priceDto.getPrice();
+                    RoomFilterResponse roomFilterResponse = RoomFilterResponse.builder()
+                            .bedType(room.getBedType())
+                            .capacity(room.getCapacity())
+                            .checkInDate(checkIn)
+                            .checkOutDate(checkOut)
+                            .id(room.getId())
+                            .square(room.getSquare())
+                            .typeOfView(room.getTypeOfView())
+                            .wifi(room.isWifi())
+                            .totalSum(countPrice)
+                            .build();
+                    roomResponse.add(roomFilterResponse);
+                } else {
+                    Duration diff = Duration.between(checkIn.atStartOfDay(), priceCheckIn.getEndDate());
 
-            RoomFilterResponse roomFilterResponse = RoomFilterResponse.builder()
-                    .bedType(room.getBedType())
-                    .capacity(room.getCapacity())
-                    .checkInDate(checkIn)
-                    .checkOutDate(checkOut)
-                    .id(room.getId())
-                    .square(room.getSquare())
-                    .typeOfView(room.getTypeOfView())
-                    .wifi(room.isWifi())
-                    .totalSum(countPrice)
-                    .build();
-            roomResponse.add(roomFilterResponse);
-            System.out.println(roomFilterResponse.getCapacity()+ " roomfilter");
+                    long diffDays = diff.toDays();
+                    diffDays += 1;
+
+                    float sumBeginning = diffDays * priceCheckIn.getPrice();
+
+                    Duration diff2 = Duration.between(priceCheckOut.getStartDate(), checkOut);
+
+                    long diffDays2 = diff.toDays();
+                    diffDays2 += 1;
+
+                    float sumEnding = diffDays2 * priceCheckOut.getPrice();
+
+
+                    float totalSum = sumBeginning + sumEnding;
+
+
+                    RoomFilterResponse roomFilterResponse = RoomFilterResponse.builder()
+                            .bedType(room.getBedType())
+                            .capacity(room.getCapacity())
+                            .checkInDate(checkIn)
+                            .checkOutDate(checkOut)
+                            .id(room.getId())
+                            .square(room.getSquare())
+                            .typeOfView(room.getTypeOfView())
+                            .wifi(room.isWifi())
+                            .totalSum(totalSum)
+                            .build();
+                    roomResponse.add(roomFilterResponse);
+                }
+            }
         });
+
 
         hotelResponse.setAvailableRooms(roomResponse);
 
-        System.out.println(hotelResponse);
         return hotelResponse;
 
     }
-
-    /*- список всех отелей по городу и по рейтингу
-
-        - фильтр по – городу
-        -- дате заезда и дате выезда
-        -- кол-во человек
-        -- кол-во номеров
-        - фильтр по типу кровати
-
-
-        - получить полную информацию по отелю с доступными вариантами
-        номеров
-*/
-
 }
+
+
+
 
 

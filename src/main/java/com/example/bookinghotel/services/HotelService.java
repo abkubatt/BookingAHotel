@@ -4,6 +4,7 @@ import com.example.bookinghotel.models.dtos.CityDto;
 import com.example.bookinghotel.models.dtos.HotelDto;
 import com.example.bookinghotel.models.enums.EBedType;
 import com.example.bookinghotel.models.request.ToFiler;
+import com.example.bookinghotel.models.response.HotelFilterResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ public interface HotelService {
     ResponseEntity<?> blockHotel(Long hotelId);
     ResponseEntity<?> confirm(Long hotelId);
 
-    ResponseEntity<?> findAllHotelsByRating(HotelDto hotelDto);
+    ResponseEntity<?> Rating(List<HotelFilterResponse> hotelFilterResponsesList);
 
     List<HotelDto> findAllHotelsByCity(Long cityId);
 
@@ -29,8 +30,9 @@ public interface HotelService {
 
     List<HotelDto> findAll();
 
-    ResponseEntity<?> filter(ToFiler filer);
-    ResponseEntity<?> filter2(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, EBedType bedType,int capacity);
+    ResponseEntity<?> filter(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, EBedType bedType,int capacity);
+
+
 
 
 }

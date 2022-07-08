@@ -34,7 +34,7 @@ public interface HotelDao extends JpaRepository<Hotel, Long> {
 
 //                                                                                                                                                                          cast(:dateFrom AS timestamp)
 
-    @Query(value = "select * from tb_hotel h where h.hotel_status = ACTIVE", nativeQuery = true)
+    @Query(value = "select * from tb_hotel h where h.hotel_status = 'ACTIVE'", nativeQuery = true)
     List<Hotel> findAllHotel();
 
     @Query(value = "select * from tb_hotel h where h.city_id = :id and exists (select * from tb_room r where r.hotel_id = h.id and r.bed_type = :#{#bedType.name()})",nativeQuery = true)
