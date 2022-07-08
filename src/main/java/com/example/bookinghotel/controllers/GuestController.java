@@ -48,6 +48,6 @@ public class GuestController {
                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
                                     @RequestParam int guestAmount,
                                     @RequestParam EBedType bedType){
-        return hotelService.filter2(cityId,checkInDate,checkOutDate,bedType);
+        return hotelService.filter2(cityId,checkInDate,checkOutDate,bedType,guestAmount);
     }
 }

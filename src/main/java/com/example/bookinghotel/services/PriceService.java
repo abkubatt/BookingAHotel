@@ -13,5 +13,5 @@ public interface PriceService {
     PriceDto save(PriceDto priceDto);
     ResponseEntity<?> update(PriceDto priceDto);
     ResponseEntity<?> delete(PriceDto priceDto);
-    PriceDto findPrice(RoomCategoryDto roomCategoryDto,LocalDate endDate);
+    PriceDto findPrice(RoomCategoryDto roomCategoryDto);
 }

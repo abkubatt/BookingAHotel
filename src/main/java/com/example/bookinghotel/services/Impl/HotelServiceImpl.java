@@ -250,7 +250,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public ResponseEntity<?> filter2(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, EBedType bedType) {
+    public ResponseEntity<?> filter2(Long cityId, LocalDate checkInDate,LocalDate checkOutDate, EBedType bedType,int capacity) {
         List<Hotel> hotels = hotelDao.findAllByCityAndBedType(cityId, bedType);
         List<HotelFilterResponse> filteredHotels = new ArrayList<>();
 
@@ -258,7 +258,7 @@ public class HotelServiceImpl implements HotelService {
         List<Hotel> availableHotels = new ArrayList<>();
 
         hotels.stream().forEach(x -> {
-            List<RoomDto> rooms = roomService.findRoomsByHotel(hotelMapper.toDto(x), bedType);
+            List<RoomDto> rooms = roomService.findRoomsByHotel(hotelMapper.toDto(x), bedType,capacity);
             List<RoomDto> availableRooms = new ArrayList<>();
 
             rooms.stream().forEach(y -> {
@@ -284,6 +284,7 @@ public class HotelServiceImpl implements HotelService {
             }
             HotelFilterResponse hotelFilterResponse = formHotelResponse(x,availableRooms,checkInDate,checkOutDate);
             filteredHotels.add(hotelFilterResponse);
+            filteredHotels.forEach(System.out::println);
 
 
         });
@@ -314,12 +315,19 @@ public class HotelServiceImpl implements HotelService {
         hotelResponse.setEmail(hotel.getEmail());
         hotelResponse.setCurrentScore(hotel.getCurrentScore());
         hotelResponse.setPhone(hotel.getPhone());
+        hotelResponse.setName(hotel.getName());
 
         List<RoomFilterResponse> roomResponse = new ArrayList<>();
         rooms.stream().forEach(room -> {
-            PriceDto priceDto = priceService.findPrice(room.getRoomCategory(),LocalDate.now());
+            System.out.println(room.getRoomCategory()+" categoryp ");
+            PriceDto priceDto = priceService.findPrice(room.getRoomCategory());
+            System.out.println(priceDto.getRoomCategory() + " priceDto");
+            System.out.println(priceDto.getPrice());
 
+            System.out.println(checkIn);
+            System.out.println(checkOut);
             Duration diff = Duration.between(checkIn.atStartOfDay(), checkOut.atStartOfDay());
+
             long diffDays = diff.toDays();
             float countPrice = diffDays * priceDto.getPrice();
 
@@ -335,10 +343,12 @@ public class HotelServiceImpl implements HotelService {
                     .totalSum(countPrice)
                     .build();
             roomResponse.add(roomFilterResponse);
+            System.out.println(roomFilterResponse.getCapacity()+ " roomfilter");
         });
 
         hotelResponse.setAvailableRooms(roomResponse);
 
+        System.out.println(hotelResponse);
         return hotelResponse;
 
     }

@@ -18,7 +18,7 @@ public interface RoomService {
 
     RoomDto findById(Long roomId);
     RoomDto findByHotel(HotelDto hotelDto);
-    List<RoomDto> findRoomsByHotel(HotelDto hotelDto, EBedType bedType);
+    List<RoomDto> findRoomsByHotel(HotelDto hotelDto, EBedType bedType,int capacity);
 
 
 }

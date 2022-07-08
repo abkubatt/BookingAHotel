@@ -30,7 +30,7 @@ public interface HotelService {
     List<HotelDto> findAll();
 
     ResponseEntity<?> filter(ToFiler filer);
-    ResponseEntity<?> filter2(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, EBedType bedType);
+    ResponseEntity<?> filter2(Long cityId, LocalDate checkInDate, LocalDate checkOutDate, EBedType bedType,int capacity);
 
 
 }
