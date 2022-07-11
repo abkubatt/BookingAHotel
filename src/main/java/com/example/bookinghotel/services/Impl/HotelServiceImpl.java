@@ -187,9 +187,9 @@ public class HotelServiceImpl implements HotelService {
     public void countCurrentScore() {
         List<HotelDto> hotelDtos = findAll();
         hotelDtos.stream().forEach(x -> {
-            List<ReviewDto> reviews = reviewService.findAllByHotelAndActive(x);
+            List<ReviewDto> reviews = reviewService.findAllByHotelAndActive(x.getId());
             double sum = reviews.stream().mapToDouble(ReviewDto::getScore).sum();
-            double currentScore = Math.round((sum / reviews.size()) / 10.0) * 10;
+            double currentScore = Math.round((sum / reviews.size()));
             x.setCurrentScore(currentScore);
             update(x);
         });
@@ -334,6 +334,7 @@ public class HotelServiceImpl implements HotelService {
 
         hotelResponse.setAvailableRooms(roomResponse);
 
+        logger.info("Status of HotelFilterResponse while method working: ->" + hotelResponse);
         return hotelResponse;
 
     }

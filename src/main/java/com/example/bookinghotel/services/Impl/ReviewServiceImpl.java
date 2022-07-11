@@ -8,6 +8,7 @@ import com.example.bookinghotel.models.dtos.ReviewDto;
 import com.example.bookinghotel.models.entities.Hotel;
 import com.example.bookinghotel.models.entities.Review;
 import com.example.bookinghotel.models.response.Message;
+import com.example.bookinghotel.services.HotelService;
 import com.example.bookinghotel.services.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,8 @@ public class ReviewServiceImpl implements ReviewService {
     private ReviewDao reviewDao;
     private final ReviewMapper reviewMapper = ReviewMapper.INSTANCE;
     private HotelMapper hotelMapper = HotelMapper.INSTANCE;
+    @Autowired
+    private HotelService hotelService;
 
     @Override
     public ResponseEntity<?> save(ReviewDto reviewDto) {
@@ -69,7 +72,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDto> findAllByHotelAndActive(HotelDto hotelDto) {
+    public List<ReviewDto> findAllByHotelAndActive(Long hotelId) {
+        HotelDto hotelDto = hotelService.findById(hotelId);
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         List<Review> review = reviewDao.findByActiveTrueAndHotel(hotel);
         if (review == null) logger.error("find all by hotel and active not found from database: -> "+ hotelDto);

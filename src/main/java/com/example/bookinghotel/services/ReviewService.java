@@ -12,5 +12,5 @@ public interface ReviewService {
     ResponseEntity<?> update(ReviewDto reviewDto);
     ResponseEntity<?> delete(ReviewDto reviewDto);
 
-    List<ReviewDto> findAllByHotelAndActive(HotelDto hotelDto);
+    List<ReviewDto> findAllByHotelAndActive(Long hotelId);
 }

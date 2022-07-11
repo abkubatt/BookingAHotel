@@ -1,5 +1,6 @@
 package com.example.bookinghotel.controllers;
 
+import com.example.bookinghotel.dao.ReplyToReviewDao;
 import com.example.bookinghotel.models.dtos.*;
 import com.example.bookinghotel.models.request.*;
 import com.example.bookinghotel.services.*;
@@ -12,23 +13,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(value = "/api/manager")
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ManagerController {
-    @Autowired HotelService hotelService;
-    @Autowired BookingService bookingService;
-
-    @Autowired
-    ReplyToReviewService replyToReviewService;
-    @Autowired
-    RoomCategoryService roomCategoryService;
-    @Autowired
-    RoomService roomService;
-    @Autowired
-    PriceService priceService;
-    @Autowired
-    FileService fileService;
-    @Autowired
-    PhotoService photoService;
+    @Autowired private HotelService hotelService;
+    @Autowired private BookingService bookingService;
+    @Autowired private ReplyToReviewService replyToReviewService;
+    @Autowired private RoomService roomService;
+    @Autowired private PriceService priceService;
+    @Autowired private FileService fileService;
+    @Autowired private PhotoService photoService;
+    @Autowired private CityService cityService;
+    @Autowired private ReviewService reviewService;
 
     @PostMapping("saveBooking")
     //@PreAuthorize("hasRole('MANAGER') or hasRole('GUEST')")
@@ -40,11 +34,13 @@ public class ManagerController {
     public ResponseEntity<?> cancelBooking(@RequestBody ToCancelBooking cancelBooking){
         return bookingService.cancelBooking(cancelBooking);
     }
-    @PostMapping("/saveReplyToReview")
-    public ResponseEntity<?> saveReplyToReview(@RequestBody ReplyToReviewDto replyToReviewDto){
-        return replyToReviewService.save(replyToReviewDto);
-    }
 
+
+
+    @PostMapping("/saveRoomRequest")
+    public ResponseEntity<?> saveRoomEntity(@RequestBody ToSaveRoom saveRoom){
+        return roomService.saveRoom(saveRoom);
+    }
     @PutMapping("/updateRoom")
     public ResponseEntity<?> updateRoom(@RequestBody RoomDto roomDto){
         return roomService.update(roomDto);
@@ -55,6 +51,7 @@ public class ManagerController {
     }
 
 
+
     @PutMapping("/updatePrice")
     public ResponseEntity<?> updatePrice(@RequestBody PriceDto priceDto){
         return priceService.update(priceDto);
@@ -63,6 +60,9 @@ public class ManagerController {
     public ResponseEntity<?> deletePrice(@RequestBody PriceDto priceDto){
         return priceService.delete(priceDto);
     }
+
+
+
     @PostMapping("/savePhoto")
     public ResponseEntity<?> savePhoto(@RequestBody PhotoDto photoDto){
         return photoService.savePhoto(photoDto);
@@ -75,19 +75,32 @@ public class ManagerController {
     public ResponseEntity<?> deletePhoto(@RequestParam Long photoId){
         return photoService.deletePhoto(photoId);
     }
-
-    @PostMapping("/saveRoomRequest")
-    public ResponseEntity<?> saveRoomEntity(@RequestBody ToSaveRoom saveRoom){
-        return roomService.saveRoom(saveRoom);
-    }
-
     @PostMapping("/uploadPhotoToHotel")
     public ResponseEntity<?> uploadPhotoToHotel(@RequestParam MultipartFile file, @RequestParam Long hotelId, @RequestParam int position){
-        return fileService.uploadImageToHotel(file,hotelId,position);
+        return fileService.uploadImageToHotel(file,hotelId,position);}
+
+    @PostMapping("/saveReplyToReview")
+    public ResponseEntity<?> saveReplyToReview(@RequestBody ReplyToReviewDto replyToReviewDto){
+        return replyToReviewService.save(replyToReviewDto);
+    }
+    @PutMapping("/deleteReview")
+    public ResponseEntity<?> deleteReview(@RequestBody ReviewDto reviewDto){
+        return reviewService.delete(reviewDto);
+    }
+    @PostMapping("/deleteReplyToReview")
+    public ResponseEntity<?> deleteReplyToReview(@RequestBody ReplyToReviewDto replyToReviewDto){
+        return replyToReviewService.delete(replyToReviewDto);
     }
 
-    @PostMapping("/saveCategory")
-    public ResponseEntity<?> saveCategory(@RequestBody ToSaveCategoryAndPrice saveCategoryAndPrice){
-        return roomCategoryService.saveCategoryAndPrice(saveCategoryAndPrice);
+
+
+    @PutMapping("update")
+    public ResponseEntity<?> updateHotel(@RequestBody HotelDto hotelDto){
+        return hotelService.update(hotelDto);}
+
+
+    @GetMapping("/findAllCity")
+    public ResponseEntity<?> findAllCities(){
+        return cityService.findAll();
     }
 }

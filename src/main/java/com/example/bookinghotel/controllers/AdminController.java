@@ -11,15 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/admin")
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdminController {
+    @Autowired private HotelService hotelService;
+    @Autowired private UserService userService;
+    @Autowired private CityService cityService;
 
-    @Autowired
-    private HotelService hotelService;
-    @Autowired UserService userService;
 
-    @Autowired
-    CityService cityService;
     @PostMapping("/saveHotel")
     public ResponseEntity<?> saveHotel(@RequestBody HotelDto hotelDto){
         return hotelService.save(hotelDto);
@@ -33,16 +30,16 @@ public class AdminController {
     public ResponseEntity<?> deleteHotel(@RequestParam Long hotelId){
         return hotelService.delete(hotelId);
     }
-
     @PutMapping("/blockHotel")
     public ResponseEntity<?> blockHotel(@RequestParam Long hotelId){
         return hotelService.blockHotel(hotelId);
     }
-
     @PutMapping("/confirmHotel")
     public ResponseEntity<?> confirmHotel(@RequestParam Long hotelId){
         return hotelService.confirm(hotelId);
     }
+
+
 
     @PostMapping("/saveUser")
     public ResponseEntity<?> saveUser(@RequestBody UserDto userDto){
@@ -57,6 +54,8 @@ public class AdminController {
         return userService.delete(userDto);
     }
 
+
+
     @PostMapping("/saveCity")
     public ResponseEntity<?> saveCity(@RequestBody CityDto cityDto){
         return cityService.save(cityDto);
@@ -68,6 +67,10 @@ public class AdminController {
     @PutMapping("deleteCity")
     public ResponseEntity<?> deleteCity(@RequestBody CityDto cityDto){
         return cityService.delete(cityDto);
+    }
+    @GetMapping("/findAllCities")
+    public ResponseEntity<?> findAllCities(){
+        return cityService.findAll();
     }
 
 }

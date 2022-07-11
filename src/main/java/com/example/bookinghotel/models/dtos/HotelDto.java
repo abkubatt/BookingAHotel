@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HotelDto {
-    @JsonIgnore
+   // @JsonIgnore
     Long id;
     String name;
     String description;
