@@ -9,7 +9,7 @@ public interface CityService {
     
     ResponseEntity<?> update(CityDto cityDto);
 
-    ResponseEntity<?> delete(CityDto cityDto);
+    ResponseEntity<?> delete(Long cityId);
 
     CityDto findById(Long cityId);
     ResponseEntity<?> findAll();

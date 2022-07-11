@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CityDto {
-    @JsonIgnore
     Long id;
     String name;
     @JsonIgnore

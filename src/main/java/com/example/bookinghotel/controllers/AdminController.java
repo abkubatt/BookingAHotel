@@ -50,8 +50,8 @@ public class AdminController {
         return userService.update(userDto);
     }
     @PutMapping("/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestBody UserDto userDto){
-        return userService.delete(userDto);
+    public ResponseEntity<?> deleteUser(@RequestParam Long userId){
+        return userService.delete(userId);
     }
 
 
@@ -65,8 +65,8 @@ public class AdminController {
         return cityService.update(cityDto);
     }
     @PutMapping("deleteCity")
-    public ResponseEntity<?> deleteCity(@RequestBody CityDto cityDto){
-        return cityService.delete(cityDto);
+    public ResponseEntity<?> deleteCity(@RequestParam Long cityId){
+        return cityService.delete(cityId);
     }
     @GetMapping("/findAllCities")
     public ResponseEntity<?> findAllCities(){

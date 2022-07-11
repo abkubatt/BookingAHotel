@@ -14,7 +14,7 @@ public interface RoomService {
 
     ResponseEntity<?> saveRoom(ToSaveRoom saveRoom);
     ResponseEntity<?> update(RoomDto roomDto);
-    ResponseEntity<?> delete(RoomDto roomDto);
+    ResponseEntity<?> delete(Long roomId);
 
     RoomDto findById(Long roomId);
     RoomDto findByHotel(HotelDto hotelDto);

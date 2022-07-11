@@ -92,7 +92,9 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public ResponseEntity<?> delete(RoomDto roomDto) {
+    public ResponseEntity<?> delete(Long roomId) {
+        RoomDto roomDto = findById(roomId);
+        System.out.println(roomDto);
         Room room = roomMapper.toEntity(roomDto);
         room.setActive(false);
         ResponseEntity<?> deletedRoom = update(roomMapper.toDto(room));

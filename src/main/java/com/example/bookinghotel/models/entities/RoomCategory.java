@@ -17,6 +17,7 @@ public class RoomCategory {
     Long id;
     @Enumerated(EnumType.STRING)
     ETypeOfRoom typeOfRoom;
+    boolean active;
 
 
 }

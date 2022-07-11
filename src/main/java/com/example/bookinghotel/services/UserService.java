@@ -6,8 +6,9 @@ import org.springframework.http.ResponseEntity;
 public interface UserService {
 
     ResponseEntity<?> save(UserDto userDto);
+    UserDto saveInProject(UserDto userDto);
     ResponseEntity<?> update(UserDto userDto);
-    ResponseEntity<?> delete(UserDto userDto);
+    ResponseEntity<?> delete(Long userId);
 
     UserDto findById(Long userId);
 }

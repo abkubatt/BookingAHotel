@@ -5,10 +5,12 @@ import com.example.bookinghotel.dao.HotelDao;
 import com.example.bookinghotel.mappers.CityMapper;
 import com.example.bookinghotel.mappers.HotelMapper;
 import com.example.bookinghotel.mappers.RoomMapper;
+import com.example.bookinghotel.mappers.UserMapper;
 import com.example.bookinghotel.models.dtos.*;
 import com.example.bookinghotel.models.entities.*;
 import com.example.bookinghotel.models.enums.EBedType;
 import com.example.bookinghotel.models.enums.EHotelStatus;
+import com.example.bookinghotel.models.enums.ERole;
 import com.example.bookinghotel.models.enums.EStatusBooking;
 import com.example.bookinghotel.models.request.ToFiler;
 import com.example.bookinghotel.models.response.HotelFilterResponse;
@@ -29,6 +31,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,30 +47,26 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     private RoomService roomService;
     @Autowired
-    private HotelService hotelService;
-    @Autowired
     private CityService cityService;
-    private final CityMapper cityMapper = CityMapper.INSTANCE;
     private final HotelMapper hotelMapper = HotelMapper.INSTANCE;
-    @Autowired
-    private BookingDao bookingDao;
     @Autowired
     private ReviewService reviewService;
     @Autowired
     private UserService userService;
-    private final RoomMapper roomMapper = RoomMapper.INSTANCE;
     @Autowired
     private PriceService priceService;
-    @Autowired
-    private RoomCategoryService roomCategoryService;
+    private final UserMapper userMapper = UserMapper.INSTANCE;
+
 
 
     @Override
     @Transactional
     public ResponseEntity<?> save(HotelDto hotelDto) {
-        ResponseEntity<?> savedUser = userService.save(hotelDto.getManager());
-        hotelDto.setManager((UserDto) savedUser.getBody());
+        UserDto userDto = hotelDto.getManager();
+        userDto.setRole(ERole.MANAGER);
+        UserDto savedUser = userService.saveInProject(userDto);
         Hotel hotel = hotelMapper.toEntity(hotelDto);
+        hotel.setManager(userMapper.toEntity(savedUser));
         hotel.setHotelStatus(EHotelStatus.NOT_AVAILABLE);
         Hotel saveHotel = hotelDao.save(hotel);
         if (saveHotel == null) logger.error("Failed while saving hotel: -> " + hotelDto);
@@ -160,8 +159,8 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public ResponseEntity<?> Rating(List<HotelFilterResponse> hotels) {
 
-        List<HotelFilterResponse> sortedList = hotels.stream().sorted(Comparator.comparing(HotelFilterResponse::getCurrentScore)).collect(Collectors.toList());
-
+        List<HotelFilterResponse> sortedList = hotels.stream().sorted(Comparator.comparing(HotelFilterResponse::getCurrentScore).reversed()).collect(Collectors.toList());
+        logger.info("Method reverse Sorting : -> " + LocalDate.now() + " " + sortedList);
         return new ResponseEntity<>(sortedList,HttpStatus.OK);
 
     }
@@ -173,8 +172,10 @@ public class HotelServiceImpl implements HotelService {
         if (cityDto != null) {
             List<Hotel> hotels = hotelDao.findAllByCity(cityDto.getId());
             if (!hotels.isEmpty()) {
+                logger.info("FindAllHotelByCity: ->  " + hotels);
                 return hotelMapper.toDtoList(hotels);
             } else {
+                logger.error("Hotel not found in this city: " + cityId);
                 return null;
             }
         } else {
@@ -240,6 +241,7 @@ public class HotelServiceImpl implements HotelService {
 
 
         });
+        logger.info("Result of filter method: -> " + filteredHotels);
         return new ResponseEntity<>(filteredHotels, HttpStatus.OK);
 
     }

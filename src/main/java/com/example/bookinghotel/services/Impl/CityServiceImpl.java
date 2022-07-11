@@ -50,7 +50,8 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public ResponseEntity<?> delete(CityDto cityDto) {
+    public ResponseEntity<?> delete(Long cityId) {
+        CityDto cityDto = findById(cityId);
         City city = cityMapper.toEntity(cityDto);
         city.setActive(false);
         ResponseEntity<?> cityDeleted = update(cityMapper.toDto(city));

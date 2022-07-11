@@ -31,6 +31,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto saveInProject(UserDto userDto) {
+        User user = userMapper.toEntity(userDto);
+        user.setActive(true);
+        User saveUser = userDao.save(user);
+        if (saveUser == null) logger.error("Failed while saving user: -> " + userDto);
+        logger.info("User successfully saved: -> "+ saveUser);
+        return userMapper.toDto(saveUser);
+    }
+
+    @Override
     public ResponseEntity<?> update(UserDto userDto) {
         boolean isExists = userDao.existsById(userDto.getId());
         if (!isExists){
@@ -47,7 +57,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> delete(UserDto userDto) {
+    public ResponseEntity<?> delete(Long userId) {
+        UserDto userDto = findById(userId);
         User user = userMapper.toEntity(userDto);
         user.setActive(false);
         ResponseEntity<?> deletedUser = update(userMapper.toDto(user));

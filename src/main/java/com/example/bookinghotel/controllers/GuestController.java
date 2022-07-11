@@ -64,8 +64,8 @@ public class GuestController {
         return reviewService.update(reviewDto);
     }
     @PutMapping("/deleteReview")
-    public ResponseEntity<?> deleteReview(@RequestBody ReviewDto reviewDto){
-        return reviewService.delete(reviewDto);
+    public ResponseEntity<?> deleteReview(@RequestParam Long reviewId){
+        return reviewService.delete(reviewId);
     }
 
 
@@ -88,14 +88,5 @@ public class GuestController {
 
 
 
-    @GetMapping("getMainPage")
-    public ResponseEntity<?> getMainPage(@RequestParam Long hotelId){
-        List<ReviewDto> reviewDtos = reviewService.findAllByHotelAndActive(hotelId);
-        if (reviewDtos.isEmpty()){
-            return new ResponseEntity<>(Message.of("Not found review from database"),HttpStatus.NOT_FOUND);
-        }
-        else{
-            return new ResponseEntity<>(reviewDtos,HttpStatus.OK);
-        }
-    }
+
 }

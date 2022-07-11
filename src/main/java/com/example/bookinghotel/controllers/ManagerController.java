@@ -23,6 +23,7 @@ public class ManagerController {
     @Autowired private PhotoService photoService;
     @Autowired private CityService cityService;
     @Autowired private ReviewService reviewService;
+    @Autowired private RoomCategoryService roomCategoryService;
 
     @PostMapping("saveBooking")
     //@PreAuthorize("hasRole('MANAGER') or hasRole('GUEST')")
@@ -46,8 +47,8 @@ public class ManagerController {
         return roomService.update(roomDto);
     }
     @PutMapping("/deleteRoom")
-    public ResponseEntity<?> deleteRoom(@RequestBody RoomDto roomDto){
-        return roomService.delete(roomDto);
+    public ResponseEntity<?> deleteRoom(@RequestParam Long roomId){
+        return roomService.delete(roomId);
     }
 
 
@@ -57,16 +58,12 @@ public class ManagerController {
         return priceService.update(priceDto);
     }
     @PutMapping("/deletePrice")
-    public ResponseEntity<?> deletePrice(@RequestBody PriceDto priceDto){
-        return priceService.delete(priceDto);
+    public ResponseEntity<?> deletePrice(@RequestParam Long priceId){
+        return priceService.delete(priceId);
     }
 
 
 
-    @PostMapping("/savePhoto")
-    public ResponseEntity<?> savePhoto(@RequestBody PhotoDto photoDto){
-        return photoService.savePhoto(photoDto);
-    }
     @PutMapping("/updatePhoto")
     public ResponseEntity<?> updatePhoto(@RequestBody PhotoDto photoDto){
         return photoService.updatePhoto(photoDto);
@@ -84,12 +81,12 @@ public class ManagerController {
         return replyToReviewService.save(replyToReviewDto);
     }
     @PutMapping("/deleteReview")
-    public ResponseEntity<?> deleteReview(@RequestBody ReviewDto reviewDto){
-        return reviewService.delete(reviewDto);
+    public ResponseEntity<?> deleteReview(@RequestParam Long reviewId){
+        return reviewService.delete(reviewId);
     }
     @PostMapping("/deleteReplyToReview")
-    public ResponseEntity<?> deleteReplyToReview(@RequestBody ReplyToReviewDto replyToReviewDto){
-        return replyToReviewService.delete(replyToReviewDto);
+    public ResponseEntity<?> deleteReplyToReview(@RequestParam Long id){
+        return replyToReviewService.delete(id);
     }
 
 
@@ -103,4 +100,10 @@ public class ManagerController {
     public ResponseEntity<?> findAllCities(){
         return cityService.findAll();
     }
+
+    @PostMapping("/saveCategoryAndPrice")
+    public ResponseEntity<?> saveCategoryAndPrice(@RequestBody ToSaveCategoryAndPrice toSaveCategoryAndPrice){
+        return roomCategoryService.saveCategoryAndPrice(toSaveCategoryAndPrice);
+    }
+
 }

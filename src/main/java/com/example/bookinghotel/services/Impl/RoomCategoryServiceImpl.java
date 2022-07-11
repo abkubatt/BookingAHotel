@@ -25,7 +25,6 @@ public class RoomCategoryServiceImpl implements RoomCategoryService {
     @Autowired
     private RoomCategoryDao roomCategoryDao;
     private final RoomCategoryMapper roomCategoryMapper = RoomCategoryMapper.INSTANCE;
-    private final PriceMapper priceMapper = PriceMapper.INSTANCE;
     @Autowired
     private PriceService priceService;
 
@@ -34,6 +33,7 @@ public class RoomCategoryServiceImpl implements RoomCategoryService {
     @Override
     public RoomCategoryDto save(RoomCategoryDto roomCategoryDto) {
         RoomCategory roomCategory = roomCategoryMapper.toEntity(roomCategoryDto);
+        roomCategory.setActive(true);
         RoomCategory savedRoomCategory = roomCategoryDao.save(roomCategory);
         if (savedRoomCategory == null){
             logger.error("Failed while saving category: -> " + roomCategoryDto);

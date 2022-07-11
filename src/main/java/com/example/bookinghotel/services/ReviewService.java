@@ -9,8 +9,11 @@ import java.util.List;
 public interface ReviewService {
 
     ResponseEntity<?> save(ReviewDto reviewDto);
+    ReviewDto saveInProject(ReviewDto reviewDto);
     ResponseEntity<?> update(ReviewDto reviewDto);
-    ResponseEntity<?> delete(ReviewDto reviewDto);
+    ResponseEntity<?> delete(Long reviewId);
 
     List<ReviewDto> findAllByHotelAndActive(Long hotelId);
+
+    ReviewDto findById(Long reviewId);
 }

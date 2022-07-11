@@ -15,18 +15,22 @@ import com.example.bookinghotel.models.enums.EStatusBooking;
 import com.example.bookinghotel.models.request.ToCancelBooking;
 import com.example.bookinghotel.models.request.ToSaveBooking;
 import com.example.bookinghotel.models.response.Message;
+import com.example.bookinghotel.models.response.ResponseEmail;
 import com.example.bookinghotel.services.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -75,7 +79,15 @@ public class BookingServiceImpl implements BookingService {
             bookHistory.setGuest(userMapper.toDto(booking.getGuest()));
             bookHistory.setStatusBooking(booking.getStatusBooking());
 
-            //ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail());
+            ResponseEmail responseEmail = new ResponseEmail();
+            responseEmail.setPriceOfBooking(booking.getPriceOfBook());
+            responseEmail.setStartDate(booking.getCheckInDate().format(DateTimeFormatter.ofPattern("dd-MMM-yy")));
+            responseEmail.setEndDate(booking.getCheckOutDate().format(DateTimeFormatter.ofPattern("dd-MMM-yy")));
+            responseEmail.setUserName(booking.getGuest().getName());
+            responseEmail.setHotelName(booking.getHotel().getName());
+
+
+            ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode(booking.getGuest().getEmail(),responseEmail);
 
             ResponseEntity<?> saveBookHistory = bookHistoryService.save(bookHistory);
 
@@ -185,9 +197,16 @@ public class BookingServiceImpl implements BookingService {
             bookHistory.setGuest(userMapper.toDto(entityBooking.getGuest()));
             bookHistory.setStatusBooking(entityBooking.getStatusBooking());
 
+            ResponseEmail responseEmail = new ResponseEmail();
+            responseEmail.setPriceOfBooking(booking.getPriceOfBook());
+            responseEmail.setStartDate(booking.getCheckInDate().format(DateTimeFormatter.ofPattern("dd-MMM-yy")));
+            responseEmail.setEndDate(booking.getCheckOutDate().format(DateTimeFormatter.ofPattern("dd-MMM-yy")));
+            responseEmail.setUserName(booking.getGuest().getName());
+            responseEmail.setHotelName(booking.getHotel().getName());
+
 
             ResponseEntity<?> savedBookingHistory = bookHistoryService.save(bookHistory);
-           // ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode2(entityBooking.getGuest().getEmail());
+            ResponseEntity<?> sendAnEmailToTheUsersEmail = sendCode2(entityBooking.getGuest().getEmail(),responseEmail);
            // if (canceledBooking.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK) && savedBookingHistory.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Booking successfully canceled: -> " + savedBookingHistory);
             return new ResponseEntity<>(canceledBooking, HttpStatus.OK);
@@ -204,9 +223,14 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public ResponseEntity<?> sendCode(String email) {
+    public ResponseEntity<?> sendCode(String email,ResponseEmail responseEmail) {
         try {
-            emailSender.sendSimpleMessage(email, "You have successfully booked a hotel", ".");
+            emailSender.sendSimpleMessage(email, "You have successfully booked a hotel",
+                    "Hotel: " +  responseEmail.getHotelName() +
+                         "     Guest name: " + responseEmail.getUserName() +
+                          "     Start Date: " + responseEmail.getStartDate() +
+                          "     End Date: " + responseEmail.getEndDate() +
+                          "     Price of booking cost: " + responseEmail.getPriceOfBooking());
             logger.info("Message successfully sent to: -> " + email);
             return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);
         } catch (Exception ex) {
@@ -215,9 +239,14 @@ public class BookingServiceImpl implements BookingService {
         }
     }
     @Override
-    public ResponseEntity<?> sendCode2(String email) {
+    public ResponseEntity<?> sendCode2(String email,ResponseEmail responseEmail) {
         try {
-            emailSender.sendSimpleMessage(email, "You have successfully canceled your hotel reservation", ".");
+            emailSender.sendSimpleMessage(email, "You have successfully canceled your hotel reservation",
+                    "Hotel: " +  responseEmail.getHotelName() +
+                            "     Guest name: " + responseEmail.getUserName() +
+                            "     Start Date: " + responseEmail.getStartDate() +
+                            "     End Date: " + responseEmail.getEndDate() +
+                            "     Price of booking cost: " + responseEmail.getPriceOfBooking());
             logger.info("Message successfully sent to: -> " + email);
 
             return new ResponseEntity<>(Message.of("Success"), HttpStatus.OK);

@@ -17,6 +17,5 @@ public class PriceDto {
     LocalDate startDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate endDate;
-    boolean active;
     RoomCategoryDto roomCategory;
 }

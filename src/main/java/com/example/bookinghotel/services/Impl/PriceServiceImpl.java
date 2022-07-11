@@ -27,7 +27,6 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public PriceDto save(PriceDto priceDto){
         Price price = priceMapper.toEntity(priceDto);
-        price.setActive(true);
         Price savedPrice = priceDao.save(price);
         if (savedPrice == null) logger.error("Failed while saving price: -> " + priceDto);
         logger.info("Price successfully saved: -> "+ savedPrice);
@@ -51,9 +50,9 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public ResponseEntity<?> delete(PriceDto priceDto) {
+    public ResponseEntity<?> delete(Long priceId) {
+        PriceDto priceDto = findById(priceId);
         Price price = priceMapper.toEntity(priceDto);
-        price.setActive(false);
         ResponseEntity<?> deletedPrice = update(priceMapper.toDto(price));
         if (deletedPrice.getStatusCode().equals(HttpStatus.OK)){
             logger.info("Price successfully deleted: -> " + deletedPrice);
@@ -67,6 +66,12 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public PriceDto findPrice(RoomCategoryDto roomCategoryDto,LocalDate date) {
         Price price = priceDao.findByRoomCategoryAndStartDateAndEndDate(roomCategoryDto.getId(),date);
+        return priceMapper.toDto(price);
+    }
+
+    @Override
+    public PriceDto findById(Long id) {
+        Price price = priceDao.findById(id).orElse(null);
         return priceMapper.toDto(price);
     }
 }

@@ -18,7 +18,6 @@ public class Price {
     float price;
     LocalDate startDate;
     LocalDate endDate;
-    boolean active;
     @ManyToOne
     @JoinColumn(name = "room_category_id")
     RoomCategory roomCategory;
