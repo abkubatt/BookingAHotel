@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+//TODO v1 version in requestmapping
 @RequestMapping(value = "/api/admin")
 public class AdminController {
     @Autowired private HotelService hotelService;

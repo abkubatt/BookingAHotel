@@ -74,8 +74,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findById(Long userId) {
         User user = userDao.findById(userId).orElse(null);
-        if (user == null) logger.error("User not found from database: -> " + userId);
-        logger.info("User successfully found from database: -> " + user);
+        if (user == null){ logger.error("User not found from database: -> " + userId);
+        logger.info("User successfully found from database: -> " + user);}
         return userMapper.toDto(user);
     }
 }

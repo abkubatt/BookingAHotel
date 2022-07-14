@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface HotelDao extends JpaRepository<Hotel, Long> {
 
-    @Query(value = "select * from tb_hotel h where h.city_id = ?1 ORDER BY h.current_score DESC", nativeQuery = true)
+    @Query(value = "select * from tb_hotel h where h.hotel_status = 'ACTIVE' and h.city_id = ?1 ORDER BY h.current_score DESC", nativeQuery = true)
     List<Hotel> findAllByCity(Long cityId);
 
 

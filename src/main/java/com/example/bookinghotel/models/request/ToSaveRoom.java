@@ -25,12 +25,12 @@ public class ToSaveRoom {
     Long hotelId;
     @NotBlank(message = "Type of view must not be empty")
     ETypeOfView typeOfView;
-    @NotBlank(message = "Price must not be empty")
-    float price;
-    @NotBlank(message = "Start date must not be empty")
-    LocalDate startDate;
-    @NotBlank(message = "End date must not be empty")
-    LocalDate endDate;
+//    @NotBlank(message = "Price must not be empty")
+//    float price;
+//    @NotBlank(message = "Start date must not be empty")
+//    LocalDate startDate;
+//    @NotBlank(message = "End date must not be empty")
+//    LocalDate endDate;
     Long roomCategoryId;
 
 }

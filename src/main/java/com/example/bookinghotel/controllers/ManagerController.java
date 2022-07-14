@@ -3,13 +3,17 @@ package com.example.bookinghotel.controllers;
 import com.example.bookinghotel.dao.ReplyToReviewDao;
 import com.example.bookinghotel.models.dtos.*;
 import com.example.bookinghotel.models.request.*;
+import com.example.bookinghotel.models.response.Message;
 import com.example.bookinghotel.services.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/manager")
@@ -38,8 +42,8 @@ public class ManagerController {
 
 
 
-    @PostMapping("/saveRoomRequest")
-    public ResponseEntity<?> saveRoomEntity(@RequestBody ToSaveRoom saveRoom){
+    @PostMapping("/saveRoom")
+    public ResponseEntity<?> saveRoom(@RequestBody ToSaveRoom saveRoom){
         return roomService.saveRoom(saveRoom);
     }
     @PutMapping("/updateRoom")
@@ -72,8 +76,8 @@ public class ManagerController {
     public ResponseEntity<?> deletePhoto(@RequestParam Long photoId){
         return photoService.deletePhoto(photoId);
     }
-    @PostMapping("/uploadPhotoToHotel")
-    public ResponseEntity<?> uploadPhotoToHotel(@RequestParam MultipartFile file, @RequestParam Long hotelId, @RequestParam int position){
+    @PostMapping("/savePhotoToHotel")
+    public ResponseEntity<?> savePhotoToHotel(@RequestParam MultipartFile file, @RequestParam Long hotelId, @RequestParam int position){
         return fileService.uploadImageToHotel(file,hotelId,position);}
 
     @PostMapping("/saveReplyToReview")
@@ -104,6 +108,16 @@ public class ManagerController {
     @PostMapping("/saveCategoryAndPrice")
     public ResponseEntity<?> saveCategoryAndPrice(@RequestBody ToSaveCategoryAndPrice toSaveCategoryAndPrice){
         return roomCategoryService.saveCategoryAndPrice(toSaveCategoryAndPrice);
+    }
+
+    @PutMapping("/findAllReviewByHote")
+    public ResponseEntity<?> findAllReviewByHotel(@RequestParam Long hotelId){
+        List<ReviewDto> reviews = reviewService.findAllByHotelAndActive(hotelId);
+        if (reviews.isEmpty()){
+            return new ResponseEntity<>(Message.of("Reviews not found by Hotel"), HttpStatus.NOT_FOUND);
+        }else{
+            return ResponseEntity.ok(reviews);
+        }
     }
 
 }
